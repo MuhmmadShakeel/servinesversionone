@@ -28,9 +28,9 @@ export function Sidebar({ activePage, onNavigate }) {
 
     <div className="sidebar-bottom">
       <span className="sidebar-tip-icon"><Icon name="spark" size={21} /></span>
-      <strong>Ready to offer a service?</strong>
-      <p>Add your skills, price and experience so people can find you.</p>
-      <button type="button" onClick={() => onNavigate('services')}>View my services <Icon name="arrow" size={16} /></button>
+      <strong>Ready to create a listing?</strong>
+      <p>Publish a service, product, or hiring request from one workspace.</p>
+      <button type="button" onClick={() => onNavigate('listings')}>Make a listing <Icon name="arrow" size={16} /></button>
     </div>
     <div className="sidebar-footer">Servnix workspace</div>
   </aside>

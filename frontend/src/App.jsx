@@ -6,14 +6,15 @@ import { Navbar } from './components/common/Navbar.jsx'
 import { DashboardPage } from './pages/DashboardPage.jsx'
 import { ServicesPage } from './pages/ServicesPage.jsx'
 import { HiringPage } from './pages/HiringPage.jsx'
-import { ListingsPage } from './pages/ListingsPage.jsx'
+import { ExploreListings, ListingsPage } from './pages/ListingsPage.jsx'
 import { MartPage } from './pages/MartPage.jsx'
 import { TradePage } from './pages/TradePage.jsx'
 
-const pages = { overview: DashboardPage, services: ServicesPage, hiring: HiringPage, listings: ListingsPage, mart: MartPage, trade: TradePage }
+const pages = { overview: DashboardPage, services: ServicesPage, hiring: HiringPage, explore: ExploreListings, listings: ListingsPage, mart: MartPage, trade: TradePage }
 
 export default function App() {
   const [activePage, setActivePage] = useState('overview')
+  const [listingSection, setListingSection] = useState('services')
   const Page = pages[activePage]
 
   useEffect(() => {
@@ -25,10 +26,11 @@ export default function App() {
     return () => cancelAnimationFrame(frame)
   }, [activePage])
 
-  function navigate(page) {
+  function navigate(page, section) {
+    if (section) setListingSection(section)
     setActivePage(page)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  return <div className="app-layout"><Sidebar activePage={activePage} onNavigate={navigate} /><div className="app-main"><Navbar /><main className="page-content"><Page onNavigate={navigate} /></main></div></div>
+  return <div className="app-layout"><Sidebar activePage={activePage} onNavigate={navigate} /><div className="app-main"><Navbar /><main className="page-content"><Page onNavigate={navigate} initialSection={listingSection} /></main></div></div>
 }

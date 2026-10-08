@@ -2,6 +2,7 @@
 import toast from 'react-hot-toast'
 import { PageHeader } from '../components/common/PageHeader.jsx'
 import { EmptyState, PrimaryButton, SearchBox, SurfaceModal } from '../components/common/UiParts.jsx'
+import { ProductShop } from '../components/products/ProductShop.jsx'
 import { Icon } from '../components/common/Icon.jsx'
 import { MyProductCard } from '../components/products/MyProductCard.jsx'
 import { ProductForm } from '../components/products/ProductForm.jsx'
@@ -9,7 +10,7 @@ import { OrderCard } from '../components/products/OrderCard.jsx'
 import { useAuthToken } from '../redux/Api/auth/AuthApi.js'
 import { useCreateProductMutation, useDeleteProductMutation, useGetMyProductsQuery, useGetSalesOrdersQuery, useUpdateProductMutation, useUpdateSalesOrderMutation } from '../redux/Api/product/ProductApi.js'
 
-export function MartPage() {
+export function MartPage({ mode = 'browse' }) {
   const token = useAuthToken()
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('All products')
@@ -61,8 +62,8 @@ export function MartPage() {
   }
 
   return <>
-    <PageHeader eyebrow="YOUR STORE" title="Mart" description="Manage your products and every order in one place." action={token && tab === 'products' && <PrimaryButton onClick={openCreate}>Add product</PrimaryButton>}/>
-    {!token ? <EmptyState label="Log in to manage products" detail="Use Log in in the top bar to add and manage your products."/> : <>
+    <PageHeader eyebrow={mode === 'manage' ? "YOUR LISTINGS" : "THE MART"} title={mode === 'manage' ? "My products" : "Mart"} description={mode === 'manage' ? "Manage products, stock, and every sale in one place." : "Browse products, save favorites, and shop from independent sellers."} action={mode === 'manage' && token && tab === 'products' && <PrimaryButton onClick={openCreate}>Add product</PrimaryButton>}/>
+    {!token ? <EmptyState label="Log in to use the Mart" detail="Use Log in in the top bar to browse products and manage your orders."/> : mode === 'browse' ? <><div className="toolbar"><SearchBox value={search} onChange={setSearch} placeholder="Search products..."/></div><ProductShop search={search} full/></> : <>
       <div className="mart-seller-hero"><div><span><Icon name="bag" size={17}/> YOUR PRODUCT STUDIO</span><h2>Bring your products to life.</h2><p>Build a clear listing with a strong photo, price and stock. Keep it in Draft until it is ready.</p><button type="button" onClick={openCreate}>Create a product <Icon name="arrow" size={17}/></button></div><div className="mart-seller-stats"><div><strong>{products.length}</strong><span>Total products</span></div><div><strong>{activeCount}</strong><span>Active listings</span></div></div></div>
       <div className="service-tabs" role="tablist" aria-label="Mart views"><button type="button" role="tab" aria-selected={tab === 'products'} className={tab === 'products' ? 'active' : ''} onClick={() => setTab('products')}>My products <span>{products.length}</span></button><button type="button" role="tab" aria-selected={tab === 'orders'} className={tab === 'orders' ? 'active' : ''} onClick={() => setTab('orders')}>Sales orders <span>{pendingCount}</span></button></div>
       {tab === 'products' ? <>

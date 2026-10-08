@@ -106,3 +106,35 @@
   .topbar-actions { flex: 1 1 auto; justify-content: flex-end; }
   .profile-button { width: 32px; height: 32px; }
 }
+
+/* Listing workspace and comfortable reading sizes */
+.listing-hub-hero { position: relative; overflow: hidden; padding: 34px 38px; margin-bottom: 20px; border-radius: 22px; color: #fff; background: radial-gradient(circle at 92% 12%, #aa8aff 0, transparent 27%), linear-gradient(115deg, #211650, #5737b5 65%, #7654dd); box-shadow: 0 18px 42px #2e1e7230; }
+.listing-hub-hero::after { content: ''; position: absolute; right: -70px; bottom: -160px; width: 340px; height: 340px; border: 1px solid #ffffff55; border-radius: 50%; pointer-events: none; }
+.listing-hub-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: #e9ddff; font-size: 12px; font-weight: 800; letter-spacing: 1.6px; }
+.listing-hub-hero h1 { position: relative; z-index: 1; margin: 13px 0 9px; font: 800 clamp(28px, 3.4vw, 42px)/1.18 Manrope, sans-serif; letter-spacing: -1.5px; }
+.listing-hub-hero p { position: relative; z-index: 1; max-width: 670px; margin: 0; color: #eee8ff; font-size: 15px; line-height: 1.65; }
+.listing-hub-stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-bottom: 20px; }
+.listing-hub-stats > div { display: grid; gap: 5px; padding: 17px 20px; background: #fff; border: 1px solid #e8e4f1; border-radius: 15px; box-shadow: 0 6px 18px #30215c0a; }
+.listing-hub-stats strong { color: #37275f; font: 800 25px Manrope, sans-serif; }
+.listing-hub-stats span { color: #706b80; font-size: 13px; font-weight: 700; }
+.listing-hub-nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 28px; }
+.listing-hub-nav button { display: flex; align-items: center; gap: 13px; min-width: 0; padding: 17px; text-align: left; border: 1px solid #e8e4f1; border-radius: 16px; color: #453d5c; background: #fff; box-shadow: 0 6px 18px #30215c0a; transition: transform .18s, border-color .18s, box-shadow .18s; }
+.listing-hub-nav button:hover { transform: translateY(-2px); border-color: #bdaaf3; box-shadow: 0 12px 28px #30215c18; }
+.listing-hub-nav button.active { border-color: #7451db; box-shadow: 0 0 0 2px #7451db20, 0 12px 28px #30215c15; }
+.listing-hub-icon { display: grid; place-items: center; width: 46px; height: 46px; flex: 0 0 46px; border-radius: 12px; color: #6947d4; background: #eee9ff; }
+.listing-hub-nav button.active .listing-hub-icon { color: #fff; background: #7150e5; }
+.listing-hub-nav button > span:nth-child(2) { display: grid; gap: 4px; flex: 1; min-width: 0; }
+.listing-hub-nav strong { font-size: 16px; font-weight: 800; }
+.listing-hub-nav small { color: #777185; font-size: 12px; line-height: 1.4; }
+.listing-hub-nav button > svg { color: #967bc9; flex: none; }
+.sidebar .nav-item { font-size: 14px; }
+.sidebar .workspace-card-copy strong, .sidebar .sidebar-bottom strong { font-size: 14px; }
+.sidebar .workspace-card-copy small, .sidebar .sidebar-bottom p, .sidebar .sidebar-bottom button { font-size: 12px; }
+.topbar-greeting, .page-heading p, .trade-intro p { font-size: 15px; }
+.section-title p, .job-card p, .service-card p, .trade-card p { font-size: 14px; line-height: 1.6; }
+.primary-button, .secondary-button, .segmented-control button, .service-tabs button, .shop-tabs button { font-size: 13px; }
+.service-card h3, .hiring-card h3, .my-proposal-card h3, .seller-product-body h3 { font-size: 18px; }
+.service-form label, .hiring-form > label, .hiring-form-row label, .product-form > label, .product-form-row label { font-size: 14px; }
+.service-form input, .service-form textarea, .service-form select, .hiring-form input:not([type=file]), .hiring-form textarea, .hiring-form select, .product-form input:not([type=file]), .product-form textarea, .product-form select { font-size: 14px; }
+@media (max-width: 1100px) { .listing-hub-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } .listing-hub-nav { grid-template-columns: 1fr; } }
+@media (max-width: 650px) { .listing-hub-hero { padding: 26px 22px; } .listing-hub-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .listing-hub-stats > div { padding: 14px; } .listing-hub-nav button { padding: 14px; } .sidebar .nav-item { font-size: 13px; } }

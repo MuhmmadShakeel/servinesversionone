@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import toast from 'react-hot-toast'
+import { ExploreListings } from './ListingsPage.jsx'
 import { PageHeader } from '../components/common/PageHeader.jsx'
 import { MyServiceCard } from '../components/services/MyServiceCard.jsx'
 import { ServiceForm } from '../components/services/ServiceForm.jsx'
@@ -8,10 +9,10 @@ import { EmptyState, PrimaryButton, SearchBox, SurfaceModal } from '../component
 import { useAuthToken } from '../redux/Api/auth/AuthApi.js'
 import { useCancelBookingMutation, useCreateServiceMutation, useDecideBookingMutation, useDeleteServiceMutation, useGetMyBookingsQuery, useGetMyServicesQuery, useGetReceivedBookingsQuery, useUpdateServiceMutation } from '../redux/Api/service/ServiceApi.js'
 
-export function ServicesPage() {
+export function ServicesPage({ mode = 'browse' }) {
   const token = useAuthToken()
   const [search, setSearch] = useState('')
-  const [tab, setTab] = useState('services')
+  const [tab, setTab] = useState(mode === 'manage' ? 'services' : 'browse')
   const [filter, setFilter] = useState('All services')
   const [editing, setEditing] = useState(null)
   const [showForm, setShowForm] = useState(false)
@@ -64,19 +65,19 @@ export function ServicesPage() {
   }
 
   return <>
-    <PageHeader eyebrow="YOUR WORK" title="My services" description="Manage your services and booking requests in one place." action={token && tab === 'services' && <PrimaryButton onClick={openCreate}>Add a service</PrimaryButton>} />
+    <PageHeader eyebrow={mode === 'manage' ? "YOUR LISTINGS" : "EXPLORE SERVICES"} title={mode === 'manage' ? "My services" : "Services"} description={mode === 'manage' ? "Create and manage your service listings and incoming requests." : "Discover services from the community, request a booking, and track your activity."} action={mode === 'manage' && token && tab === 'services' && <PrimaryButton onClick={openCreate}>Add a service</PrimaryButton>} />
     {!token ? <EmptyState label="Log in to manage services" detail="Use Log in in the top bar to see, add, edit and delete your services." /> : <>
       <div className="service-tabs" role="tablist" aria-label="Services views">{[
-        { id: 'services', label: 'My services', count: services.length },
-        { id: 'received', label: 'Booking requests', count: receivedQuery.data?.bookings?.length || 0 },
+        ...(mode === 'manage' ? [{ id: 'services', label: 'My listings', count: services.length }] : [{ id: 'browse', label: 'Explore services', count: null }]),
+        ...(mode === 'manage' ? [{ id: 'received', label: 'Booking requests', count: receivedQuery.data?.bookings?.length || 0 }] : []),
         { id: 'mine', label: 'My bookings', count: mineQuery.data?.bookings?.length || 0 },
-      ].map((item) => <button key={item.id} type="button" role="tab" aria-selected={tab === item.id} className={tab === item.id ? 'active' : ''} onClick={() => { setTab(item.id); setSearch('') }}>{item.label}<span>{item.count}</span></button>)}</div>
-      {tab === 'services' ? <>
+      ].map((item) => <button key={item.id} type="button" role="tab" aria-selected={tab === item.id} className={tab === item.id ? 'active' : ''} onClick={() => { setTab(item.id); setSearch('') }}>{item.label}{item.count !== null && <span>{item.count}</span>}</button>)}</div>
+      {tab === 'browse' ? <ExploreListings category="Services" /> : tab === 'services' ? <>
       <div className="toolbar"><SearchBox value={search} onChange={setSearch} placeholder="Search your services..."/><div className="segmented-control">{['All services', 'Active', 'Draft'].map((item) => <button key={item} className={filter === item ? 'selected' : ''} onClick={() => setFilter(item)}>{item}</button>)}</div></div>
       {isLoading ? <div className="service-loading" role="status">Loading your services…</div> : isError ? <div className="service-loading" role="alert">Could not load your services. <button type="button" onClick={refetch}>Try again</button></div> : visible.length ? <div className="service-grid">{visible.map((service) => <MyServiceCard key={service.id} service={service} onEdit={openEdit} onDelete={setDeleting} />)}</div> : <EmptyState label={services.length ? 'No matching services' : 'Your services will appear here'} detail={services.length ? 'Try another search or status filter.' : 'Add your first service to get started.'} />}
       </> : <>
         <div className="toolbar"><SearchBox value={search} onChange={setSearch} placeholder="Search bookings..."/><span className="results-count">{bookings.length} bookings</span></div>
-        {bookingsQuery.isLoading ? <div className="service-loading" role="status">Loading bookings...</div> : bookingsQuery.isError ? <div className="service-loading" role="alert">Could not load bookings. <button type="button" onClick={bookingsQuery.refetch}>Try again</button></div> : bookings.length ? <div className="booking-grid">{bookings.map((booking) => <BookingCard key={booking.id} booking={booking} mode={tab} busy={deciding || cancelling} onDecision={(item, status) => setBookingAction({ booking: item, status })} onCancel={(item) => setBookingAction({ booking: item, status: 'cancelled' })}/>)}</div> : <EmptyState label={tab === 'received' ? 'No booking requests yet' : 'No bookings yet'} detail={tab === 'received' ? 'Requests for your services will appear here.' : 'Book a service from Explore Listings to get started.'}/>}
+        {bookingsQuery.isLoading ? <div className="service-loading" role="status">Loading bookings...</div> : bookingsQuery.isError ? <div className="service-loading" role="alert">Could not load bookings. <button type="button" onClick={bookingsQuery.refetch}>Try again</button></div> : bookings.length ? <div className="booking-grid">{bookings.map((booking) => <BookingCard key={booking.id} booking={booking} mode={tab} busy={deciding || cancelling} onDecision={(item, status) => setBookingAction({ booking: item, status })} onCancel={(item) => setBookingAction({ booking: item, status: 'cancelled' })}/>)}</div> : <EmptyState label={tab === 'received' ? 'No booking requests yet' : 'No bookings yet'} detail={tab === 'received' ? 'Requests for your services will appear here.' : 'Explore services and send a booking request to get started.'}/>}
       </>}
     </>}
     {showForm && <ServiceForm key={editing?.id || 'new'} service={editing} onClose={() => setShowForm(false)} onSave={save} isSaving={creating || updating} />}
