@@ -4,7 +4,7 @@ import { assertUuid, validateProposal, validateRequirement } from './hiringValid
 
 const requirementColumns = `h.id, h.owner_user_id AS "ownerUserId", u.name AS "ownerName",
   h.title, h.category, h.description, h.budget_min AS "budgetMin", h.budget_max AS "budgetMax",
-  h.status, h.created_at AS "createdAt", h.updated_at AS "updatedAt",
+  h.status, h.share_count AS "shareCount", h.created_at AS "createdAt", h.updated_at AS "updatedAt",
   (SELECT COUNT(*)::integer FROM hiring_proposals p WHERE p.requirement_id = h.id) AS "proposalCount",
   COALESCE((SELECT json_agg(json_build_object('id', m.id, 'kind', m.kind, 'mimeType', m.mime_type,
     'fileName', m.file_name, 'sizeBytes', m.size_bytes) ORDER BY m.created_at)

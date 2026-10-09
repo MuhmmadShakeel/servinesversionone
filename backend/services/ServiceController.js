@@ -3,7 +3,7 @@ import { ApiError } from '../common/utils/ApiError.js'
 import { serviceIdPattern, validateService } from './serviceValidation.js'
 
 const columns = `id, owner_user_id AS "ownerUserId", title, category, description,
-  price, experience_years AS "experienceYears", status,
+  price, experience_years AS "experienceYears", status, share_count AS "shareCount",
   created_at AS "createdAt", updated_at AS "updatedAt"`
 
 function serviceId(request) {
@@ -23,7 +23,7 @@ export async function browseServices(_request, response, next) {
     const result = await pool.query(
       `SELECT s.id, s.owner_user_id AS "ownerUserId", u.name AS "ownerName",
        s.title, s.category, s.description, s.price,
-       s.experience_years AS "experienceYears", s.status,
+       s.experience_years AS "experienceYears", s.status, s.share_count AS "shareCount",
        s.created_at AS "createdAt", s.updated_at AS "updatedAt"
        FROM services s JOIN users u ON u.id = s.owner_user_id
        WHERE s.status = 'active' ORDER BY s.updated_at DESC`,

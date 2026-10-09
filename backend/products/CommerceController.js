@@ -4,7 +4,7 @@ import { ApiError } from '../common/utils/ApiError.js'
 import { productIdPattern } from './productValidation.js'
 
 const catalogColumns = `p.id, p.owner_user_id AS "ownerUserId", u.name AS "ownerName",
-  p.title, p.category, p.description, p.price, p.quantity, p.status,
+  p.title, p.category, p.description, p.price, p.quantity, p.status, p.share_count AS "shareCount",
   (p.image_content IS NOT NULL) AS "hasImage", p.updated_at AS "updatedAt"`
 const orderColumns = `o.id, o.checkout_id AS "checkoutId", o.product_id AS "productId",
   o.buyer_user_id AS "buyerUserId", o.seller_user_id AS "sellerUserId",
@@ -34,9 +34,10 @@ function text(value, label, min, max) {
 }
 
 function checkoutDetails(body) {
-  if (!body || typeof body !== 'object' || Array.isArray(body) || Object.keys(body).some((key) => !['contactPhone', 'deliveryAddress', 'buyerNote'].includes(key))) {
+  if (!body || typeof body !== 'object' || Array.isArray(body) || Object.keys(body).some((key) => !['contactPhone', 'deliveryAddress', 'buyerNote', 'paymentMethod'].includes(key))) {
     throw new ApiError(400, 'Enter valid checkout details.')
   }
+  if (body.paymentMethod !== undefined && body.paymentMethod !== 'cash') throw new ApiError(400, 'Choose Cash as your payment method.')
   const contactPhone = text(body.contactPhone, 'Contact number', 7, 30)
   if (!/^\+?[\d\s().-]+$/.test(contactPhone) || (contactPhone.match(/\d/g) || []).length < 7) throw new ApiError(400, 'Enter a valid contact number.')
   return {
@@ -171,7 +172,7 @@ export async function checkout(request, response, next) {
     }
     await client.query('DELETE FROM product_cart WHERE user_id = $1', [request.user.id])
     await client.query('COMMIT')
-    response.status(201).json({ checkoutId, orderIds, message: 'Order placed. Payment is arranged with each seller.' })
+    response.status(201).json({ checkoutId, orderIds, message: 'Order placed. Pay each seller in cash at delivery or handover.' })
   } catch (error) {
     if (client) await client.query('ROLLBACK')
     next(error)

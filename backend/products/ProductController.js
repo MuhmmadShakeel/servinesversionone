@@ -3,7 +3,7 @@ import { ApiError } from '../common/utils/ApiError.js'
 import { productIdPattern, validateProduct } from './productValidation.js'
 
 const columns = `id, owner_user_id AS "ownerUserId", title, category, description,
-  price, quantity, status, (image_content IS NOT NULL) AS "hasImage",
+  price, quantity, status, share_count AS "shareCount", (image_content IS NOT NULL) AS "hasImage",
   image_file_name AS "imageFileName", created_at AS "createdAt", updated_at AS "updatedAt"`
 
 function productId(request) {
@@ -28,7 +28,7 @@ export async function browseProducts(_request, response, next) {
   try {
     const result = await pool.query(
       `SELECT p.id, p.owner_user_id AS "ownerUserId", u.name AS "ownerName",
-       p.title, p.category, p.description, p.price, p.quantity, p.status,
+       p.title, p.category, p.description, p.price, p.quantity, p.status, p.share_count AS "shareCount",
        (p.image_content IS NOT NULL) AS "hasImage", p.updated_at AS "updatedAt"
        FROM products p JOIN users u ON u.id = p.owner_user_id
        WHERE p.status = 'active' AND p.quantity > 0 ORDER BY p.updated_at DESC`,
