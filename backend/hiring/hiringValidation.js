@@ -1,11 +1,11 @@
 import { ApiError } from '../common/utils/ApiError.js'
+import { validateVoice } from '../common/voice/voiceStorage.js'
 
 export const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const amountPattern = /^\d{1,10}(\.\d{1,2})?$/
 const mimeTypes = {
   photo: ['image/jpeg', 'image/png', 'image/webp'],
   video: ['video/mp4', 'video/webm'],
-  audio: ['audio/mpeg', 'audio/wav', 'audio/webm', 'audio/ogg'],
 }
 const maxFileBytes = 8 * 1024 * 1024
 const maxTotalBytes = 16 * 1024 * 1024
@@ -35,7 +35,7 @@ function exactFields(input, allowed) {
 }
 
 export function validateRequirement(input) {
-  exactFields(input, ['title', 'category', 'description', 'budgetMin', 'budgetMax', 'status', 'media'])
+  exactFields(input, ['title', 'category', 'description', 'budgetMin', 'budgetMax', 'status', 'media', 'voice'])
   const budgetMin = amount(input.budgetMin, 'Minimum budget')
   const budgetMax = amount(input.budgetMax, 'Maximum budget')
   if (Number(budgetMax) < Number(budgetMin)) throw new ApiError(400, 'Maximum budget must be at least the minimum budget.')
@@ -47,6 +47,7 @@ export function validateRequirement(input) {
     description: text(input.description, 'Description', 20, 5000),
     budgetMin, budgetMax, status,
     media: input.media === undefined ? undefined : validateMedia(input.media),
+    ...(input.voice === undefined ? {} : { voice: validateVoice(input.voice) }),
   }
 }
 
@@ -66,7 +67,7 @@ export function validateMedia(files) {
   let total = 0
   return files.map((file) => {
     if (!file || typeof file !== 'object' || !mimeTypes[file.kind]?.includes(file.mimeType)) {
-      throw new ApiError(400, 'Choose a supported photo, video or audio file.')
+      throw new ApiError(400, 'Choose a supported photo or video attachment. Use the voice note field for audio.')
     }
     const fileName = text(file.fileName, 'File name', 1, 180)
     if (/[\\/\x00-\x1f]/.test(fileName)) throw new ApiError(400, 'Invalid file name.')

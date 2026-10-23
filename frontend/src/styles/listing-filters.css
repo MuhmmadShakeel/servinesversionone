@@ -1,0 +1,29 @@
+.listing-filters { margin: 0 0 24px; padding: 16px; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); box-shadow: var(--s-sm); }
+.listing-filters-toggle { display: flex; align-items: center; gap: 8px; width: 100%; border: 0; background: none; color: var(--text-1); font: 800 14px var(--font-sans), sans-serif; text-align: left; cursor: pointer; }
+.listing-filters-toggle span { margin-left: auto; color: var(--brand); font-size: 12px; }
+.listing-filters-fields { display: grid; grid-template-columns: minmax(150px, 2fr) minmax(140px, 1.4fr) repeat(2, minmax(110px, 1fr)) auto; gap: 10px; align-items: end; margin-top: 14px; }
+.listing-filters-fields-city { grid-template-columns: minmax(140px, 1.6fr) repeat(2, minmax(115px, 1.1fr)) repeat(2, minmax(95px, 1fr)) auto; }
+.listing-filters-fields label { display: grid; gap: 6px; color: var(--text-3); font-size: 11px; font-weight: 800; }
+.listing-filters-fields input, .listing-filters-fields select { width: 100%; min-width: 0; height: 40px; padding: 0 11px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text-1); font: 600 13px var(--font-sans), sans-serif; }
+.listing-filters-fields input:focus, .listing-filters-fields select:focus { outline: 2px solid var(--brand); outline-offset: 1px; }
+.listing-filters-clear { height: 40px; padding: 0 15px; border: 1px solid var(--border); border-radius: 10px; background: var(--brand-pale); color: var(--brand); font-weight: 800; cursor: pointer; }
+.listing-action-row { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; margin-top: 16px; }
+.listing-action-row > button { display: inline-flex; flex: 1 1 0; align-items: center; justify-content: center; gap: 5px; min-width: 0; min-height: 39px; padding: 7px 8px; border-radius: 10px; white-space: nowrap; font-size: 11px; font-weight: 800; }
+.listing-action-row .share-button { margin: 0; }
+.listing-action-row .owner-status-button { border: 1px solid #b9d9cc; color: #126348; background: linear-gradient(135deg, #e9faf2, #f7fffb); cursor: pointer; }
+.listing-action-row .owner-status-button.is-live { border-color: #d7dce8; color: #42516b; background: #f4f6fa; }
+.owner-status-dot { width: 8px; height: 8px; flex: none; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 3px rgba(18, 99, 72, .12); }
+.category-field small { display: block; margin-top: 5px; color: #64748b; font-size: 12px; }
+.listing-action-row .share-button strong { font-size: 10px; }
+.listing-action-row .shop-cart-button { width: auto; margin: 0; }
+.boost-button { border: 1px solid #e7d8fa; background: linear-gradient(135deg, #fbf5ff, #f2ebff); color: #6942ac; cursor: pointer; }
+.boost-button:hover { background: #eee2ff; }
+.related-listings { margin-top: 32px; padding-top: 25px; border-top: 1px solid var(--border-soft) }
+.related-listings-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 19px; padding: 18px 20px; border: 1px solid #e7ddfb; border-radius: var(--r-lg); background: linear-gradient(115deg, #f6f0ff, #fbfaff 60%, #eef9f5) }
+.related-listings-heading > div > span { display: inline-flex; align-items: center; gap: 7px; color: var(--brand); font-size: 10px; font-weight: 900; letter-spacing: 1.2px }
+.related-listings-heading h2 { margin: 7px 0 4px; color: var(--text-1); font-family: var(--font-display); font-size: clamp(19px, 2.5vw, 25px); line-height: 1.2 }
+.related-listings-heading p { margin: 0; color: var(--text-3); font-size: 12px; line-height: 1.5 }
+.related-listings-heading > strong { flex: none; padding: 7px 10px; border: 1px solid #ded0f8; border-radius: var(--r-pill); background: var(--surface); color: var(--brand); font-size: 11px }
+@media (max-width: 600px) { .related-listings-heading { align-items: flex-start; flex-direction: column } }
+@media (max-width: 850px) { .listing-filters-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); } .listing-filters-clear { grid-column: 1 / -1; } }
+@media (max-width: 440px) { .listing-action-row { flex-wrap: wrap; } .listing-action-row > button { flex-basis: calc(50% - 4px); } }

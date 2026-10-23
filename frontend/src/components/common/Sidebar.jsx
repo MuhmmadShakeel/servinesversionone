@@ -1,15 +1,20 @@
 import { navigation } from '../../config/navigation.js'
 import { Icon } from './Icon.jsx'
+import { useAuthToken } from '../../redux/Api/auth/AuthApi.js'
+import { useGetConversationsQuery } from '../../redux/Api/chat/ChatApi.js'
 
-export function Sidebar({ activePage, onNavigate }) {
-  return <aside className="sidebar" aria-label="Workspace sidebar">
-    <button className="brand" type="button" onClick={() => onNavigate('overview')} aria-label="Servnix overview">
-      <span className="brand-mark">S<span>.</span></span>
-      <span>servnix<span className="brand-dot">.</span></span>
+export function Sidebar({ activePage, onNavigate, open }) {
+  const token = useAuthToken()
+  const { data } = useGetConversationsQuery(undefined, { skip: !token, pollingInterval: 10000, skipPollingIfUnfocused: true, refetchOnFocus: true })
+  const unread = (data?.conversations || []).reduce((total, conversation) => total + (conversation.unreadCount || 0), 0)
+  return <aside className={`sidebar${open ? ' sidebar-open' : ''}`} aria-label="Workspace sidebar" inert={!open}>
+    <button className="brand" type="button" onClick={() => onNavigate('overview')} aria-label="jobNshop overview">
+      <span className="brand-mark">J<span>.</span></span>
+      <span>jobNshop</span>
     </button>
 
     <div className="workspace-card">
-      <span className="workspace-avatar">S</span>
+      <span className="workspace-avatar">J</span>
       <span className="workspace-card-copy"><strong>My workspace</strong><small>All your activity in one place</small></span>
     </div>
 
@@ -19,10 +24,11 @@ export function Sidebar({ activePage, onNavigate }) {
         {navigation.map(({ id, label, icon }) => <button
           key={id}
           type="button"
-          className={`nav-item ${activePage === id ? 'active' : ''}`}
+          className={`nav-item ${id === 'explore' ? 'nav-item-marketplace' : ''} ${activePage === id ? 'active' : ''}`}
           onClick={() => onNavigate(id)}
           aria-current={activePage === id ? 'page' : undefined}
-        ><Icon name={icon} size={20} /><span>{label}</span><Icon name="chevron" size={15} className="nav-chevron" /></button>)}
+          aria-label={id === 'chat' && unread ? `${label}, ${unread} unread messages` : undefined}
+        ><Icon name={icon} size={20} /><span>{label}</span>{id === 'chat' && unread > 0 && <strong className="sidebar-unread" aria-hidden="true">{unread > 99 ? '99+' : unread}</strong>}<Icon name="chevron" size={15} className="nav-chevron" /></button>)}
       </nav>
     </div>
 
@@ -30,8 +36,8 @@ export function Sidebar({ activePage, onNavigate }) {
       <span className="sidebar-tip-icon"><Icon name="spark" size={21} /></span>
       <strong>Ready to create a listing?</strong>
       <p>Publish a service, product, or hiring request from one workspace.</p>
-      <button type="button" onClick={() => onNavigate('listings')}>Make a listing <Icon name="arrow" size={16} /></button>
+      <button type="button" onClick={() => onNavigate('listings')}>Create a listing <Icon name="arrow" size={16} /></button>
     </div>
-    <div className="sidebar-footer">Servnix workspace</div>
+    <div className="sidebar-footer">jobNshop workspace</div>
   </aside>
 }

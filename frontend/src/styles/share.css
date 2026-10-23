@@ -1,0 +1,117 @@
+/* ── Share button & dialog ────────────────────────────────────── */
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 8px 13px;
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 11px;
+  font-weight: 700;
+  transition: all var(--t-fast);
+}
+.share-button:hover:not(:disabled) {
+  background: var(--brand-pale);
+  border-color: var(--brand-muted);
+  color: var(--brand);
+}
+.share-button:disabled { opacity: .55; cursor: not-allowed }
+.share-button strong { color: var(--brand) }
+
+.listing-share-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.shared-listing-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--brand-pale);
+  color: var(--brand);
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+.shared-listing-banner button {
+  margin-left: auto;
+  border: 0;
+  background: none;
+  color: var(--brand);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.shared-listing-banner button:hover { color: var(--brand-dark) }
+
+/* Share dialog (inside modal) */
+.share-dialog { display: grid; gap: 16px }
+.share-dialog-icon {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: var(--r-md);
+  background: var(--brand-pale);
+  color: var(--brand);
+  font-size: 24px;
+}
+.share-dialog h3 { font-family: var(--font-display); font-size: 18px; font-weight: 800; margin: 0 0 4px; color: var(--text-1) }
+.share-dialog p  { margin: 0; font-size: 13px; color: var(--text-3); line-height: 1.65 }
+.share-dialog label { display: grid; gap: 6px; font-size: 12px; font-weight: 700; color: var(--text-2) }
+
+.share-link-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.share-link-row input {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 10px 13px;
+  font-size: 12px;
+  background: var(--surface-2);
+  color: var(--text-3);
+  outline: none;
+}
+.share-link-row button,
+.share-device-button {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  border-radius: var(--r-sm);
+  padding: 10px 15px;
+  background: var(--g-brand);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: var(--s-sm);
+  transition: box-shadow var(--t-base), opacity var(--t-fast);
+}
+.share-link-row button:hover:not(:disabled),
+.share-device-button:hover:not(:disabled) { box-shadow: var(--s-md) }
+.share-link-row button:disabled,
+.share-device-button:disabled { opacity: .55; cursor: not-allowed }
+
+.share-device-button {
+  width: 100%;
+  justify-content: center;
+  background: var(--surface-2);
+  color: var(--brand);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+.share-device-button:hover:not(:disabled) { background: var(--brand-pale); border-color: var(--brand-muted) }
+.share-dialog small { font-size: 11px; color: var(--text-4); line-height: 1.6 }

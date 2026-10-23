@@ -25,6 +25,7 @@ export const hiringApi = createApi({
     updateProposal: builder.mutation({ query: ({ id, ...body }) => ({ url: `/proposals/${id}`, method: 'PUT', body }), invalidatesTags: ['OpenRequirements', 'MyRequirements', 'MyProposals', 'Proposals'] }),
     deleteProposal: builder.mutation({ query: (id) => ({ url: `/proposals/${id}`, method: 'DELETE' }), invalidatesTags: ['OpenRequirements', 'MyRequirements', 'MyProposals', 'Proposals', 'Requirement'] }),
     acceptProposal: builder.mutation({ query: ({ requirementId, proposalId }) => ({ url: `/${requirementId}/proposals/${proposalId}/accept`, method: 'POST' }), invalidatesTags: (_result, _error, { requirementId }) => ['OpenRequirements', 'MyRequirements', 'MyProposals', 'Proposals', { type: 'Requirement', id: requirementId }] }),
+    rejectProposal: builder.mutation({ query: ({ requirementId, proposalId }) => ({ url: `/${requirementId}/proposals/${proposalId}/reject`, method: 'POST' }), invalidatesTags: (_result, _error, { requirementId }) => ['MyRequirements', 'MyProposals', 'Proposals', { type: 'Requirement', id: requirementId }] }),
   }),
 })
 
@@ -32,5 +33,5 @@ export const {
   useGetOpenRequirementsQuery, useGetMyRequirementsQuery, useGetRequirementQuery,
   useGetMyProposalsQuery, useGetProposalsQuery, useCreateRequirementMutation,
   useUpdateRequirementMutation, useDeleteRequirementMutation, useSubmitProposalMutation,
-  useUpdateProposalMutation, useDeleteProposalMutation, useAcceptProposalMutation,
+  useUpdateProposalMutation, useDeleteProposalMutation, useAcceptProposalMutation, useRejectProposalMutation,
 } = hiringApi

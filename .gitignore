@@ -1,3 +1,5 @@
 backend/.env.local
 **/node_modules/
 frontend/dist/
+backend/voice/*
+!backend/voice/.gitkeep

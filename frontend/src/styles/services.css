@@ -1,52 +1,265 @@
-.my-service-card { display: flex; flex-direction: column; }
-.my-service-card p { min-height: 52px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
-.my-service-meta { display: flex; flex-wrap: wrap; gap: 8px 15px; color: #9390a4; font-size: 10px; margin-top: auto; }
-.my-service-card .service-card-footer { align-items: center; }
-.my-service-card .service-card-footer strong { font-size: 13px; white-space: nowrap; }
-.my-service-actions { display: flex; gap: 6px; }
-.my-service-actions button { display: inline-flex; align-items: center; gap: 5px; border: 1px solid #e7e2f3; border-radius: 8px; background: #fff; padding: 7px 9px; color: #6947db; font-size: 11px; font-weight: 700; }
-.my-service-actions button:hover { background: #f5f1ff; }
-.my-service-actions .danger-action { color: #ae4b55; border-color: #f1d9dd; }
-.my-service-actions .danger-action:hover { background: #fff3f4; }
-.service-form { display: grid; gap: 14px; }
-.service-form label { display: grid; gap: 7px; color: #4c4860; font-size: 12px; font-weight: 700; }
-.service-form input, .service-form textarea, .service-form select { width: 100%; border: 1px solid #dedbe9; border-radius: 9px; background: #fff; padding: 11px 12px; color: #302d42; font-size: 12px; outline: none; }
-.service-form input:focus, .service-form textarea:focus, .service-form select:focus { border-color: #8b73e9; box-shadow: 0 0 0 3px rgb(111 77 230 / 10%); }
-.service-form textarea { resize: vertical; }
-.service-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.service-form-actions { display: flex; justify-content: flex-end; gap: 9px; border-top: 1px solid #eeeaf3; padding-top: 16px; margin-top: 5px; }
-.service-form-actions button:disabled { opacity: .6; cursor: wait; }
-.service-loading { padding: 50px 20px; text-align: center; background: #fff; border: 1px solid #e9e6f0; border-radius: 14px; color: #747087; font-size: 13px; }
-.service-loading button { border: 0; background: none; color: #6845dd; font-weight: 800; text-decoration: underline; }
-.delete-copy { color: #777387; font-size: 13px; line-height: 1.6; }
-.delete-button { border: 0; border-radius: 9px; background: #b64d5b; color: #fff; padding: 10px 14px; font-size: 12px; font-weight: 800; }
-.delete-button:hover { background: #9f3644; }
-.service-tabs { display: flex; gap: 7px; margin-bottom: 22px; padding: 6px; border: 1px solid #ece9f5; border-radius: 14px; background: #f3f0fa; overflow-x: auto; }
-.service-tabs button { display: inline-flex; align-items: center; gap: 9px; border: 0; border-radius: 10px; padding: 11px 15px; background: transparent; color: #77728d; font-size: 12px; font-weight: 800; white-space: nowrap; }
-.service-tabs button.active { background: #fff; color: #6643dc; box-shadow: 0 4px 14px #30225b12; }
-.service-tabs button span { min-width: 21px; padding: 3px 6px; border-radius: 7px; background: #e8e1fb; color: #6846db; font-size: 10px; text-align: center; }
-.booking-service-summary { border: 1px solid #e8e1f5; border-radius: 13px; background: linear-gradient(125deg, #f6f2ff, #fff); padding: 18px; margin-bottom: 20px; }
-.booking-service-summary span { color: #7857df; font-size: 9px; font-weight: 800; letter-spacing: 1.5px; }
-.booking-service-summary h3 { margin: 7px 0 2px; font-family: Manrope, sans-serif; font-size: 17px; }
-.booking-service-summary p { margin: 0 0 11px; color: #79748b; font-size: 11px; }
-.booking-service-summary strong { display: block; font-size: 15px; }
-.booking-service-summary small { display: block; margin-top: 8px; color: #9690a5; font-size: 10px; overflow-wrap: anywhere; }
-.booking-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px; }
-.booking-card { border: 1px solid #e9e6f0; border-radius: 16px; background: #fff; padding: 20px; min-width: 0; box-shadow: 0 6px 24px #28205908; }
-.booking-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-.booking-card h3 { margin: 6px 0 0; font-family: Manrope, sans-serif; font-size: 16px; }
-.booking-status { flex: none; padding: 6px 9px; border-radius: 20px; font-size: 10px; font-weight: 800; }
-.booking-status.pending { background: #fff4df; color: #9a6819; }
-.booking-status.approved { background: #e7f6ee; color: #26815c; }
-.booking-status.rejected, .booking-status.cancelled { background: #f7e9eb; color: #a44854; }
-.booking-card-people { display: flex; align-items: center; gap: 6px; margin-top: 14px; color: #6c6681; font-size: 11px; font-weight: 700; }
-.booking-card-details { margin: 16px 0; color: #635f73; font-size: 12px; line-height: 1.6; white-space: pre-wrap; }
-.booking-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 15px; border-radius: 10px; background: #f8f7fc; }
-.booking-facts span { color: #4f4a61; font-size: 11px; overflow-wrap: anywhere; }
-.booking-facts strong { display: block; margin-bottom: 3px; color: #9691a6; font-size: 10px; }
-.booking-card-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
-.booking-card-footer small { color: #a6a0b3; font-size: 9px; overflow-wrap: anywhere; }
-.booking-card-footer>div { display: flex; gap: 7px; }
-.booking-card-footer button { padding: 8px 11px; }
-@media (max-width: 900px) { .booking-grid { grid-template-columns: 1fr; } }
-@media (max-width: 600px) { .service-form-row { grid-template-columns: 1fr; } .my-service-card .service-card-footer { flex-wrap: wrap; } }
+/* ── Services page ────────────────────────────────────────────── */
+
+/* My service cards */
+.service-cover { position: relative; display: grid; place-items: center; height: 184px; overflow: hidden; border-radius: var(--r-md); background: linear-gradient(135deg, #f0eafa, #e4f4ed); color: var(--brand) }
+.service-cover img { width: 100%; height: 100%; object-fit: cover }
+.service-cover > span { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 18px; background: rgba(255,255,255,.75) }
+.service-grid:has(.service-browse-card) { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px }
+.service-browse-card { display: flex; flex-direction: column; min-width: 0 }
+.service-browse-photo > .service-cover { width: 100%; height: 100%; border-radius: 0 }
+.service-browse-card:hover .service-cover img { transform: scale(1.05) }
+.service-browse-photo .service-cover img { transition: transform var(--t-slow) }
+.service-browse-body { display: flex; flex: 1; flex-direction: column; align-items: flex-start; min-width: 0 }
+.service-browse-body h3 { min-height: 44px; margin: 8px 0 6px; line-height: 1.3 }
+.service-city { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; padding: 5px 9px; border: 1px solid #d8eadd; border-radius: 999px; background: #f1faf3; color: #27694a; font-size: 11px; font-weight: 800; line-height: 1.2; }
+.service-city svg { flex: none }
+.service-browse-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px }
+.service-browse-heading, .service-browse-body .listing-action-row { width: 100% }
+.service-browse-body .shop-product-seller { margin-top: 10px }
+.service-browse-body .shop-product-price { width: 100%; margin-top: auto; padding-top: 15px }
+.service-browse-body .shop-product-price > span { text-align: right }
+.service-browse-body .listing-action-row { margin-top: 0 }
+.service-owner-status { justify-content: flex-end }
+.my-service-card { overflow: hidden; padding: 0; cursor: default }
+.my-service-card > .review-image-wrap { height: 190px }
+.my-service-card-body { padding: 18px 20px 20px }
+.my-service-card-body .card-top { margin-bottom: 8px }
+.my-service-card-body h3 { margin: 5px 0 8px; font-size: 18px }
+.my-service-card p {
+  display: -webkit-box;
+  overflow: hidden;
+  min-height: 40px;
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.65;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.my-service-meta {
+  display: flex;
+  gap: 14px;
+  margin: 10px 0;
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 600;
+}
+.my-service-card .service-card-footer { display: grid; align-items: stretch; margin-top: 12px }
+.my-service-card .service-card-footer .price-display strong { font-size: 18px }
+
+.my-service-actions {
+  display: flex;
+  gap: 7px;
+  margin-top: 6px;
+}
+.my-service-actions button {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 9px;
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 11px;
+  font-weight: 700;
+  transition: all var(--t-fast);
+}
+.my-service-actions button:hover { background: var(--brand-pale); border-color: var(--brand-muted); color: var(--brand) }
+.my-service-actions .danger-action { color: var(--red) }
+.my-service-actions .danger-action:hover { background: var(--red-pale); border-color: rgba(208,64,74,.35); color: var(--red) }
+
+/* Service form */
+.service-image-field { display: grid; gap: 12px; padding: 15px; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface-2) }
+.service-image-field > div:first-child { display: grid; gap: 4px }
+.service-image-field strong { color: var(--text-1); font-size: 13px }
+.service-image-field span { color: var(--text-3); font-size: 11px }
+.service-image-preview { overflow: hidden; border-radius: var(--r-sm) }
+.service-image-preview > img, .service-image-preview .service-cover { width: 100%; height: 175px; object-fit: cover }
+.service-image-empty { display: grid; place-items: center; gap: 8px; height: 175px; background: #eeeaf8; color: var(--brand) }
+.service-image-controls { display: flex; align-items: center; gap: 10px }
+.service-upload-button, .service-image-controls button { display: inline-flex !important; align-items: center; gap: 6px; width: auto; padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface); color: var(--brand); font-size: 12px; font-weight: 700; cursor: pointer }
+.service-upload-button input { display: none }
+.service-form { display: grid; gap: 14px }
+.service-form label { display: grid; gap: 6px; font-size: 12px; font-weight: 700; color: var(--text-2) }
+.service-city-field > span { display: inline-flex; align-items: center; gap: 6px; color: var(--text-1) }
+.service-city-field > span svg { color: var(--brand) }
+.service-city-field small { color: var(--text-3); font-size: 11px; font-weight: 500 }
+.service-form input,
+.service-form textarea,
+.service-form select {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 10px 13px;
+  font-size: 12px;
+  background: var(--surface);
+  outline: none;
+  color: var(--text-1);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.service-form input:focus,
+.service-form textarea:focus,
+.service-form select:focus {
+  border-color: var(--brand-muted);
+  box-shadow: 0 0 0 3px var(--brand-glow);
+}
+.service-form textarea { resize: vertical }
+.service-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 13px }
+.service-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  border-top: 1px solid var(--border-soft);
+  padding-top: 16px;
+  margin-top: 4px;
+}
+.service-form-actions button:disabled { opacity: .55; cursor: not-allowed }
+
+/* Loading states */
+.service-loading {
+  padding: 36px;
+  text-align: center;
+  color: var(--text-3);
+  font-size: 13px;
+}
+.service-loading button {
+  border: 0;
+  background: none;
+  color: var(--brand);
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: underline;
+}
+
+/* Delete confirm */
+.delete-copy { font-size: 13px; color: var(--text-2); line-height: 1.65; margin-bottom: 18px }
+.delete-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: var(--red);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  transition: filter var(--t-fast), transform var(--t-fast);
+}
+.delete-button:hover { filter: brightness(1.08); transform: translateY(-1px) }
+
+/* Tabs */
+.service-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 22px;
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface-3);
+  overflow-x: auto;
+}
+.service-tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  border-radius: var(--r-sm);
+  padding: 9px 15px;
+  background: none;
+  color: var(--text-3);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: all var(--t-fast);
+}
+.service-tabs button.active {
+  background: var(--surface);
+  color: var(--brand);
+  box-shadow: var(--s-sm);
+}
+.service-tabs button span {
+  padding: 2px 7px;
+  border-radius: var(--r-xs);
+  background: var(--brand-pale);
+  color: var(--brand);
+  font-size: 10px;
+}
+
+/* Booking service summary */
+.booking-service-summary {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  margin-bottom: 16px;
+}
+.booking-service-summary span { color: var(--brand); font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase }
+.booking-service-summary h3   { font-family: var(--font-display); font-size: 15px; font-weight: 800; margin: 6px 0 5px; color: var(--text-1) }
+.booking-service-summary p    { font-size: 12px; color: var(--text-3); margin: 0 0 10px; line-height: 1.6 }
+.booking-service-summary strong { font-size: 15px; color: var(--text-1) }
+.booking-service-summary small  { font-size: 11px; color: var(--text-4); margin-left: 4px }
+
+/* Booking grid */
+.booking-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px }
+.booking-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 18px;
+  box-shadow: var(--s-xs);
+  transition: box-shadow var(--t-base), transform var(--t-base);
+}
+.booking-card:hover { box-shadow: var(--s-md); transform: translateY(-1px) }
+.booking-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.booking-card h3 { font-family: var(--font-display); font-size: 15px; font-weight: 700; margin: 8px 0 6px; color: var(--text-1); line-height: 1.3 }
+
+.booking-status {
+  font-size: 10px;
+  font-weight: 800;
+  border-radius: var(--r-pill);
+  padding: 4px 10px;
+  letter-spacing: .3px;
+  text-transform: capitalize;
+  flex: 0 0 auto;
+}
+.booking-status.pending  { background: var(--blue-pale);   color: var(--blue) }
+.booking-status.approved { background: var(--green-pale);  color: var(--green) }
+.booking-status.rejected,
+.booking-status.cancelled { background: var(--red-pale);   color: var(--red) }
+
+.booking-card-people { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: var(--text-3); font-size: 12px }
+.booking-card-details { font-size: 12px; color: var(--text-2); line-height: 1.65; margin-bottom: 10px }
+
+.booking-facts { display: flex; flex-wrap: wrap; gap: 12px; padding: 12px; border-radius: var(--r-sm); background: var(--surface-2) }
+.booking-facts span  { display: grid; gap: 3px; color: var(--text-1); font-size: 11px }
+.booking-facts strong { color: var(--text-4); font-size: 10px; font-weight: 600 }
+
+.booking-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--border-soft);
+  padding-top: 14px;
+  margin-top: 14px;
+}
+.booking-card-footer small { color: var(--text-4); font-size: 10px }
+.booking-card-footer > div { display: flex; gap: 7px }
+.booking-card-footer button { padding: 8px 11px; font-size: 11px }
+
+@media (max-width: 900px)  { .booking-grid { grid-template-columns: 1fr } }
+@media (max-width: 1200px) { .service-grid:has(.service-browse-card) { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+@media (max-width: 640px) { .service-grid:has(.service-browse-card) { grid-template-columns: 1fr } }
+@media (max-width: 640px)  { .service-form-row { grid-template-columns: 1fr } }

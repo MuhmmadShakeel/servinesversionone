@@ -26,6 +26,9 @@ const paths = {
   edit: <><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L9 17l-4 1 1-4 10.5-10.5Z"/></>,
   trash: <><path d="M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14M10 11v6m4-6v6"/></>,
   check: <path d="m5 12 4 4L19 6"/>,
+  chat: <><path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 3v-3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/><path d="M7 10h10M7 14h7"/></>,
+  share: <><circle cx="18" cy="5" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="18" cy="19" r="2"/><path d="m7 11 9-5m-9 7 9 5"/></>,
+  help: <><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4.3 1.7c-1.1 1-1.8 1.5-1.8 3.3M12 17h.01"/></>,
 }
 
 export function Icon({ name, size = 20, className = '' }) {

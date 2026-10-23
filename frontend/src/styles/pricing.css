@@ -1,0 +1,5 @@
+.price-display { display: inline-grid; justify-items: start; align-content: center; gap: 3px; line-height: 1.2; vertical-align: middle; }
+.price-display del { color: #858b98; font-size: 13px; font-weight: 600; text-decoration-line: line-through; text-decoration-thickness: 1.5px; }
+.price-display strong { color: var(--brand); font-size: 18px; font-weight: 900; letter-spacing: -.3px; }
+.price-display .price-display-badge { padding: 3px 7px; border-radius: 6px; background: #e8f8ef; color: #14815a; font-size: 10px; font-weight: 900; white-space: nowrap; }
+.price-form-hint { margin: -4px 0 14px; color: var(--text-3); font-size: 12px; line-height: 1.5; }

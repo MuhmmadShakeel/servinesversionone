@@ -4,7 +4,7 @@ import { serviceIdPattern } from './serviceValidation.js'
 import { validateBooking } from './bookingValidation.js'
 
 const bookingColumns = `b.id, b.service_id AS "serviceId", b.buyer_user_id AS "buyerUserId",
-  b.owner_user_id AS "ownerUserId", b.service_title AS "serviceTitle",
+  b.owner_user_id AS "ownerUserId", b.service_title AS "serviceTitle", s.category AS "serviceCategory",
   b.agreed_price AS "agreedPrice", b.contact_phone AS "contactPhone",
   b.service_address AS "serviceAddress", b.request_details AS "requestDetails",
   b.preferred_date AS "preferredDate", b.status,
@@ -12,6 +12,7 @@ const bookingColumns = `b.id, b.service_id AS "serviceId", b.buyer_user_id AS "b
   buyer.name AS "buyerName", owner.name AS "ownerName"`
 
 const bookingFrom = `FROM service_bookings b
+  JOIN services s ON s.id = b.service_id
   JOIN users buyer ON buyer.id = b.buyer_user_id
   JOIN users owner ON owner.id = b.owner_user_id`
 

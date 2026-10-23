@@ -1,0 +1,33 @@
+/* Shared finishing touches for the jobNshop interface. */
+.app-main { display: flex; flex-direction: column; min-height: 100vh; }
+.page-content { flex: 1; width: 100%; }
+
+.sidebar { background: linear-gradient(180deg, #fff 0%, #fcfbff 100%); }
+.brand { letter-spacing: -.075em; font-size: 21px; white-space: nowrap; }
+.brand-mark { letter-spacing: -.09em; }
+.workspace-card { box-shadow: 0 1px 3px rgba(31, 19, 88, .04); }
+.nav-item { min-height: 44px; }
+.nav-item:focus-visible, .site-footer button:focus-visible { outline: 3px solid var(--brand-muted); outline-offset: 2px; }
+.sidebar-footer { border-top: 1px solid var(--border-soft); padding-top: 16px; font-weight: 700; letter-spacing: .02em; }
+
+.topbar { backdrop-filter: blur(16px); background: rgba(255,255,255,.95); }
+.topbar-greeting { color: var(--text-2); font-weight: 600; }
+.page-heading, .overview-heading { padding-bottom: 20px; border-bottom: 1px solid var(--border-soft); }
+.page-heading h1, .overview-heading h1 { letter-spacing: -.045em; }
+.page-heading p, .overview-heading p { max-width: 66ch; }
+.page-stat { border-color: var(--border-soft); box-shadow: var(--s-sm); }
+.page-stat:hover { border-color: var(--brand-muted); }
+
+.site-footer { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 25px 44px 32px; border-top: 1px solid var(--border-soft); background: #fff; }
+.site-footer-brand { display: grid; gap: 4px; }
+.site-footer-brand strong { color: var(--text-1); font: 800 17px/1.2 var(--font-display); letter-spacing: -.05em; }
+.site-footer-brand span { color: var(--text-3); font-size: 12px; }
+.site-footer nav { display: flex; flex-wrap: wrap; gap: 5px 18px; }
+.site-footer button { border: 0; border-radius: 7px; padding: 7px 4px; background: transparent; color: var(--text-3); font-size: 12px; font-weight: 700; }
+.site-footer button:hover { color: var(--brand-dark); }
+
+@media (max-width: 640px) {
+  .page-heading, .overview-heading { padding-bottom: 16px; }
+  .site-footer { align-items: flex-start; flex-direction: column; gap: 16px; padding: 24px 20px 28px; }
+  .site-footer nav { column-gap: 14px; }
+}

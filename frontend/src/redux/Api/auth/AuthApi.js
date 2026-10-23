@@ -42,10 +42,11 @@ export const authApi = createApi({
     signup: builder.mutation({ query: (body) => ({ url: '/signup', method: 'POST', body }) }),
     login: builder.mutation({ query: (body) => ({ url: '/login', method: 'POST', body }) }),
     me: builder.query({ query: () => '/me', providesTags: ['Session'] }),
+    updateProfileImage: builder.mutation({ query: (image) => ({ url: '/me/image', method: 'PUT', body: { image } }), invalidatesTags: ['Session'] }),
     logout: builder.mutation({ query: (token) => ({ url: '/logout', method: 'POST', headers: { Authorization: `Bearer ${token}` } }) }),
     forgotPassword: builder.mutation({ query: (email) => ({ url: '/password/forgot', method: 'POST', body: { email } }) }),
     resetPassword: builder.mutation({ query: (body) => ({ url: '/password/reset', method: 'POST', body }) }),
   }),
 })
 
-export const { useSignupMutation, useLoginMutation, useMeQuery, useLogoutMutation, useForgotPasswordMutation, useResetPasswordMutation } = authApi
+export const { useSignupMutation, useLoginMutation, useMeQuery, useUpdateProfileImageMutation, useLogoutMutation, useForgotPasswordMutation, useResetPasswordMutation } = authApi

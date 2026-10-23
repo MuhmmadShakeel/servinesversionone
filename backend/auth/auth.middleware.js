@@ -14,7 +14,7 @@ export async function authenticate(request, _response, next) {
     const claims = jwt.verify(match[1], env.jwtSecret, { algorithms: ['HS256'] })
     if (!claims.jti || !claims.sub) throw new ApiError(401, 'Your session is invalid or has expired.')
     const result = await sessionQuery(
-      `SELECT u.id, u.name, u.email FROM ${schemaPrefix}auth_sessions s
+      `SELECT u.id, u.name, u.email, (u.profile_image_content IS NOT NULL) AS "hasProfileImage" FROM ${schemaPrefix}auth_sessions s
        JOIN ${schemaPrefix}users u ON u.id = s.user_id
        WHERE s.id = $1 AND s.user_id = $2 AND s.revoked_at IS NULL AND s.expires_at > NOW()`,
       [claims.jti, claims.sub],

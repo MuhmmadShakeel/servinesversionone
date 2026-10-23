@@ -4,8 +4,9 @@ import { ApiError } from '../common/utils/ApiError.js'
 import { productIdPattern } from './productValidation.js'
 
 const catalogColumns = `p.id, p.owner_user_id AS "ownerUserId", u.name AS "ownerName",
-  p.title, p.category, p.description, p.price, p.quantity, p.status, p.share_count AS "shareCount",
-  (p.image_content IS NOT NULL) AS "hasImage", p.updated_at AS "updatedAt"`
+  p.title, p.category, p.description, p.price, p.original_price AS "originalPrice", p.quantity, p.status, p.share_count AS "shareCount",
+  (p.image_content IS NOT NULL) AS "hasImage", (p.voice_file IS NOT NULL) AS "hasVoice",
+  p.voice_duration_seconds AS "voiceDurationSeconds", p.updated_at AS "updatedAt"`
 const orderColumns = `o.id, o.checkout_id AS "checkoutId", o.product_id AS "productId",
   o.buyer_user_id AS "buyerUserId", o.seller_user_id AS "sellerUserId",
   o.product_title AS "productTitle", o.unit_price AS "unitPrice",
@@ -143,16 +144,25 @@ export async function checkout(request, response, next) {
     const details = checkoutDetails(request.body)
     client = await pool.connect()
     await client.query('BEGIN')
+    // Serialize checkouts from the same buyer, including two requests for an empty cart.
+    await client.query('SELECT id FROM users WHERE id = $1 FOR NO KEY UPDATE', [request.user.id])
     const cart = await client.query(
-      `SELECT c.product_id, c.quantity AS "cartQuantity", p.owner_user_id, p.title, p.price,
-       p.quantity AS stock, p.status FROM product_cart c JOIN products p ON p.id = c.product_id
-       WHERE c.user_id = $1 ORDER BY c.product_id FOR UPDATE OF c, p`,
+      `SELECT c.product_id, c.quantity AS "cartQuantity" FROM product_cart c
+       WHERE c.user_id = $1 ORDER BY c.product_id FOR UPDATE OF c`,
       [request.user.id],
     )
     if (!cart.rowCount) throw new ApiError(400, 'Your cart is empty.')
     const checkoutId = randomUUID()
     const orderIds = []
-    for (const item of cart.rows) {
+    for (const cartItem of cart.rows) {
+      // Lock products one at a time in a stable order. The next checkout sees
+      // the committed stock and status after the first transaction finishes.
+      const locked = await client.query(
+        'SELECT owner_user_id, title, price, quantity AS stock, status FROM products WHERE id = $1 FOR UPDATE',
+        [cartItem.product_id],
+      )
+      const item = { ...cartItem, ...locked.rows[0] }
+      if (!locked.rowCount) throw new ApiError(409, 'A product in your cart is no longer available. Update your cart and try again.')
       if (item.owner_user_id === request.user.id || item.status !== 'active' || item.stock < item.cartQuantity) {
         throw new ApiError(409, `${item.title} is unavailable or exceeds stock. Update your cart and try again.`)
       }

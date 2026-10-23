@@ -5,7 +5,7 @@ export function ServiceCard({ service }) {
 }
 
 export function JobCard({ job }) {
-  return <article className="job-card"><div className="job-card-top"><span className={`job-avatar ${job.tone}`}>{job.initials}</span><span className="job-posted"><Icon name="clock" size={14}/>{job.posted}</span></div><span className="card-kicker">{job.category}</span><h3>{job.title}</h3><p>{job.description}</p><div className="job-card-footer"><strong>{job.budget}</strong><span>{job.bids} proposals</span></div></article>
+  return <article className="job-card"><div className="job-card-top"><span className={`job-avatar ${job.tone}`}>{job.initials}</span><span className="job-posted"><Icon name="clock" size={14}/>{job.posted}</span></div><span className="card-kicker">{job.category}</span><h3>{job.title}</h3><div className="job-card-footer"><strong>{job.budget}</strong><span>{job.bids} proposals</span></div></article>
 }
 
 export function ProductCard({ product }) {

@@ -16,6 +16,7 @@ test('media accepts supported types and rejects unsafe payloads', () => {
   const file = { kind: 'photo', mimeType: 'image/png', fileName: 'sample.png', base64: Buffer.from('sample').toString('base64') }
   assert.equal(validateMedia([file])[0].content.toString(), 'sample')
   assert.throws(() => validateMedia([{ ...file, mimeType: 'image/svg+xml' }]))
+  assert.throws(() => validateMedia([{ ...file, kind: 'audio', mimeType: 'audio/wav' }]))
   assert.throws(() => validateMedia([{ ...file, fileName: '../bad.png' }]))
   assert.throws(() => validateMedia([file, file, file, file]))
 })

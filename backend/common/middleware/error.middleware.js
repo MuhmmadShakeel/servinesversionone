@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto'
 import { ApiError } from '../utils/ApiError.js'
 
 export function notFound(request, _response, next) {
@@ -9,12 +10,35 @@ export function notFound(request, _response, next) {
   )
 }
 
-export function errorHandler(error, _request, response, _next) {
-  const statusCode = error.statusCode || 500
-  const message =
-    statusCode === 500
-      ? 'Internal server error.'
-      : error.message
+export function errorHandler(error, request, response, next) {
+  const statusCode = Number.isInteger(error?.statusCode) && error.statusCode >= 400 && error.statusCode <= 599
+    ? error.statusCode
+    : 500
 
-  response.status(statusCode).json({ message })
+  if (statusCode >= 500) {
+    const requestId = randomUUID()
+    console.error(JSON.stringify({
+      event: 'api_error',
+      timestamp: new Date().toISOString(),
+      requestId,
+      statusCode,
+      method: request.method,
+      path: request.path,
+      error: {
+        name: error?.name || 'Error',
+        message: error?.message || String(error),
+        code: error?.code,
+        stack: error?.stack,
+      },
+    }))
+    if (response.headersSent) return next(error)
+    response.set('X-Request-ID', requestId)
+    const message = statusCode === 500
+      ? `Internal server error. Reference: ${requestId}`
+      : error.message
+    return response.status(statusCode).json({ message, requestId })
+  }
+
+  if (response.headersSent) return next(error)
+  return response.status(statusCode).json({ message: error.message })
 }

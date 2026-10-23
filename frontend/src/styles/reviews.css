@@ -1,0 +1,42 @@
+.review-entry { display: flex; align-items: center; justify-content: flex-start; align-self: flex-start; width: fit-content; max-width: 100%; margin: 7px 0 12px }
+.review-entry button { display: inline-flex; align-items: center; gap: 7px; min-height: 34px; padding: 6px 10px; border: 1px solid #f1dfab; border-radius: 999px; background: #fff9e9; color: var(--text-2); font-size: 11px; cursor: pointer; transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast) }
+.review-entry button strong { color: var(--text-1); font-size: 12px; font-weight: 800 }
+.review-entry-star { color: #dc990d; font-size: 17px; line-height: 1 }
+.review-entry button:hover { background: #fff2ce; border-color: #dc990d; transform: translateY(-1px) }
+.review-entry button:focus-visible { outline: 3px solid var(--brand-glow); outline-offset: 2px }
+.review-entry-compact { margin: 9px 0 0 }
+.review-image-wrap { position: relative; height: 190px; overflow: hidden }
+.review-image-wrap > .seller-product-image,
+.review-image-wrap > .service-cover { width: 100%; height: 100%; border-radius: 0 }
+.review-entry-image { position: absolute; z-index: 2; top: 12px; left: 6px; right: auto; max-width: calc(100% - 62px); margin: 0 }
+.review-entry-image button { min-height: 36px; max-width: 100%; padding: 7px 11px; background: rgba(255,255,255,.96); border-color: rgba(255,255,255,.85); box-shadow: 0 4px 16px rgba(23,20,46,.18); backdrop-filter: blur(8px) }
+.review-entry-image button span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.review-image-wrap .review-entry-image { max-width: calc(100% - 24px) }
+.hiring-card > .review-entry { margin-left: -8px }
+.surface-modal:has(.reviews-panel) { width: min(100%, 610px) }
+.reviews-panel { display: grid; gap: 18px }
+.reviews-summary { display: flex; align-items: baseline; gap: 8px; padding: 14px; border-radius: var(--r-md); background: #fff8e7 }
+.reviews-summary span { color: #eea91b; font-size: 26px }
+.reviews-summary strong { color: var(--text-1); font-size: 23px }
+.reviews-summary small { color: var(--text-3); font-size: 12px }
+.review-form { display: grid; gap: 10px; padding: 16px; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface-2) }
+.review-form > strong { color: var(--text-1); font-size: 13px }
+.review-picker { display: flex; gap: 5px }
+.review-picker button { padding: 0; border: 0; background: none; color: #c9c9d1; font-size: 30px; cursor: pointer }
+.review-picker button.selected { color: #eea91b }
+.review-form textarea { width: 100%; padding: 11px; border: 1px solid var(--border); border-radius: var(--r-sm); color: var(--text-1); resize: vertical }
+.review-form .primary-button { justify-self: end }
+.review-form-actions, .review-owner-actions, .review-delete-confirm > div { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px }
+.review-owner-actions { justify-content: flex-start }
+.review-owner-actions button { padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface); color: var(--text-2); font-size: 12px; font-weight: 700; cursor: pointer }
+.review-owner-actions .review-delete-action { color: #b83232; border-color: #f1c5c5 }
+.review-delete-confirm { padding: 14px; border: 1px solid #f1c5c5; border-radius: var(--r-md); background: #fff8f8 }
+.review-delete-confirm p { margin: 0 0 12px; color: var(--text-1); font-size: 12px; font-weight: 700 }
+.review-eligibility { margin: 0; color: var(--text-3); font-size: 11px; line-height: 1.5 }
+.review-list { display: grid; gap: 10px; max-height: 340px; overflow-y: auto }
+.review-list article { padding: 14px; border: 1px solid var(--border); border-radius: var(--r-md) }
+.review-list article > div { display: flex; justify-content: space-between; gap: 10px }
+.review-list article strong { color: var(--text-1); font-size: 12px }
+.review-list article span { color: #eea91b; font-size: 14px }
+.review-list article small { color: var(--text-4); font-size: 10px }
+.review-list article p, .review-list > p { margin: 7px 0 0; color: var(--text-2); font-size: 12px; line-height: 1.6; overflow-wrap: anywhere }

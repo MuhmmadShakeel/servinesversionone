@@ -1,4 +1,5 @@
 import { ApiError } from '../common/utils/ApiError.js'
+import { validateVoice } from '../common/voice/voiceStorage.js'
 
 export const productIdPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 export const maxImageBytes = 5 * 1024 * 1024
@@ -33,23 +34,35 @@ export function validateProductImage(value) {
 }
 
 export function validateProduct(input) {
-  const fields = ['title', 'category', 'description', 'price', 'quantity', 'status', 'image']
+  const fields = ['title', 'category', 'description', 'price', 'originalPrice', 'quantity', 'status', 'image', 'voice', 'biddingEnabled', 'biddingDurationHours']
   if (!input || typeof input !== 'object' || Array.isArray(input) || Object.keys(input).some((key) => !fields.includes(key))) {
     throw new ApiError(400, 'Enter valid product details.')
   }
   const price = String(input.price ?? '')
   if (!/^\d{1,10}(\.\d{1,2})?$/.test(price)) throw new ApiError(400, 'Price must be a non-negative amount with up to two decimal places.')
+  const originalPrice = String(input.originalPrice ?? price)
+  if (!/^\d{1,10}(\.\d{1,2})?$/.test(originalPrice) || Number(originalPrice) < Number(price)) throw new ApiError(400, 'Original price must be at least the discounted price.')
   const quantityText = String(input.quantity ?? '')
   if (!/^(0|[1-9]\d{0,5})$/.test(quantityText)) throw new ApiError(400, 'Quantity must be between 0 and 999999.')
   const status = input.status ?? 'draft'
   if (!['draft', 'active'].includes(status)) throw new ApiError(400, 'Choose Draft or Active status.')
+  if (input.biddingEnabled !== undefined && typeof input.biddingEnabled !== 'boolean') throw new ApiError(400, 'Choose whether this product accepts bids.')
+  const biddingDurationHours = input.biddingDurationHours
+  if (biddingDurationHours !== undefined && (!Number.isInteger(biddingDurationHours) || biddingDurationHours < 1 || biddingDurationHours > 720)) {
+    throw new ApiError(400, 'Bidding must run for 1 hour to 30 days.')
+  }
+  if (input.biddingEnabled === false && biddingDurationHours !== undefined) throw new ApiError(400, 'Enable bidding before choosing a duration.')
   return {
     title: requiredText(input.title, 'Title', 3, 160),
     category: requiredText(input.category, 'Category', 2, 80),
     description: requiredText(input.description, 'Description', 10, 3000),
     price,
+    originalPrice,
     quantity: Number(quantityText),
     status,
+    biddingEnabled: input.biddingEnabled,
+    biddingDurationHours,
     image: input.image === undefined ? undefined : validateProductImage(input.image),
+    ...(input.voice === undefined ? {} : { voice: validateVoice(input.voice) }),
   }
 }

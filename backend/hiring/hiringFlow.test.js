@@ -52,6 +52,10 @@ test('client manages hiring and compares worker proposals with database media', 
     assert.equal((await send('GET', `/v1/hiring/${requirement.id}/proposals`, workerToken)).status, 404)
     const clientProposals = (await (await send('GET', `/v1/hiring/${requirement.id}/proposals`, clientToken)).json()).proposals
     assert.equal(clientProposals.length, 2)
+    const otherProposalId = clientProposals.find((proposal) => proposal.id !== proposalId).id
+    assert.equal((await send('POST', `/v1/hiring/${requirement.id}/proposals/${otherProposalId}/reject`, workerToken)).status, 404)
+    assert.equal((await send('POST', `/v1/hiring/${requirement.id}/proposals/${otherProposalId}/reject`, clientToken)).status, 200)
+    assert.equal((await send('POST', `/v1/hiring/${requirement.id}/proposals/${otherProposalId}/reject`, clientToken)).status, 404)
     assert.equal((await (await send('GET', '/v1/hiring/proposals/mine', workerToken)).json()).proposals.length, 1)
     assert.equal((await send('PUT', `/v1/hiring/proposals/${proposalId}`, otherToken, proposalBody)).status, 404)
     assert.equal((await send('PUT', `/v1/hiring/proposals/${proposalId}`, workerToken, { ...proposalBody, bidAmount: '1700' })).status, 200)

@@ -16,7 +16,7 @@ test('service CRUD is visible and mutable only to its owner', async () => {
     headers: { ...(body ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) },
     ...(body ? { body: JSON.stringify(body) } : {}),
   })
-  const payload = { title: 'Brand design', category: 'Creative', description: 'Complete brand identity and guidelines', price: '1500.00', experienceYears: 4, status: 'active' }
+  const payload = { title: 'Brand design', category: 'Creative', city: 'Bahawalpur', description: 'Complete brand identity and guidelines', price: '1500.00', experienceYears: 4, status: 'active' }
   try {
     for (const email of [emailOne, emailTwo]) {
       assert.equal((await request('POST', '/v1/auth/signup', null, { name: 'Service User', email, password: 'StrongPass123' })).status, 201)
@@ -32,10 +32,12 @@ test('service CRUD is visible and mutable only to its owner', async () => {
     assert.match(service.id, /^[0-9a-f-]{36}$/)
     assert.equal(service.ownerUserId, owner.id)
     assert.equal(service.title, payload.title)
+    assert.equal(service.city, payload.city)
 
     assert.equal((await request('GET', '/v1/services/browse')).status, 401)
     const browse = await (await request('GET', '/v1/services/browse', otherToken)).json()
     assert.equal(browse.services.find((item) => item.id === service.id)?.ownerName, 'Service User')
+    assert.equal(browse.services.find((item) => item.id === service.id)?.city, payload.city)
 
     const ownList = await (await request('GET', '/v1/services', ownerToken)).json()
     assert.equal(ownList.services.length, 1)

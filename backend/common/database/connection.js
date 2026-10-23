@@ -3,11 +3,15 @@ import { env } from '../config/env.js'
 const { Pool } = pg
 const pool = new Pool({
   connectionString: env.databaseUrl,
+  max: 5,
+  connectionTimeoutMillis: 5000,
+  idleTimeoutMillis: 30000,
   onConnect: env.databaseSchema ? async (client) => {
     const { rowCount } = await client.query('SELECT 1 FROM pg_namespace WHERE nspname = $1', [env.databaseSchema])
     if (!rowCount) throw new Error(`Database schema "${env.databaseSchema}" does not exist`)
   } : undefined,
 })
+pool.on('error', (error) => console.error('Idle PostgreSQL connection error:', error))
 
 // Transaction poolers may reset session settings between statements. Set the
 // schema inside each transaction so every query resolves the same tables.

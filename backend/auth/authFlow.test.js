@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createHash, randomBytes, randomUUID } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 import app from '../Server.js'
 import pool from '../common/database/connection.js'
 import { migrate } from '../common/database/migrate.js'
@@ -44,6 +44,19 @@ test('signup, login, authenticated profile, and logout use one account', async (
     const profile = await fetch(`${base}/me`, { headers: { Authorization: `Bearer ${token}` } })
     assert.equal(profile.status, 200)
     assert.equal((await profile.json()).user.email, email)
+    const imageBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO7N2h8AAAAASUVORK5CYII='
+    const imageUpload = await fetch(`${base}/me/image`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: { mimeType: 'image/png', base64: imageBase64 } }),
+    })
+    assert.equal(imageUpload.status, 200)
+    const profileWithImage = await fetch(`${base}/me`, { headers: { Authorization: `Bearer ${token}` } })
+    assert.equal((await profileWithImage.json()).user.hasProfileImage, true)
+    const imageResponse = await fetch(`${base}/me/image`, { headers: { Authorization: `Bearer ${token}` } })
+    assert.equal(imageResponse.status, 200)
+    assert.equal(imageResponse.headers.get('content-type'), 'image/png')
+    assert.deepEqual(Buffer.from(await imageResponse.arrayBuffer()), Buffer.from(imageBase64, 'base64'))
 
     const logout = await request('/logout', {}, token)
     assert.equal(logout.status, 204)
@@ -55,14 +68,14 @@ test('signup, login, authenticated profile, and logout use one account', async (
 
     const activeLogin = await request('/login', { email, password: 'StrongPass123' })
     const activeToken = (await activeLogin.json()).token
-    const resetToken = randomBytes(32).toString('hex')
-    await pool.query("INSERT INTO password_resets (user_id, token_hash, expires_at) VALUES ($1, $2, NOW() + INTERVAL '20 minutes')", [signupBody.user.id, createHash('sha256').update(resetToken).digest('hex')])
-    const reset = await request('/password/reset', { token: resetToken, password: 'NewStrongPass123' })
+    const resetOtp = '123456'
+    await pool.query("INSERT INTO password_resets (user_id, token_hash, expires_at) VALUES ($1, $2, NOW() + INTERVAL '20 minutes')", [signupBody.user.id, createHash('sha256').update(`${email}:${resetOtp}`).digest('hex')])
+    const reset = await request('/password/reset', { email, otp: resetOtp, password: 'NewStrongPass123' })
     assert.equal(reset.status, 200)
     assert.equal((await fetch(`${base}/me`, { headers: { Authorization: `Bearer ${activeToken}` } })).status, 401)
     assert.equal((await request('/login', { email, password: 'StrongPass123' })).status, 401)
     assert.equal((await request('/login', { email, password: 'NewStrongPass123' })).status, 200)
-    assert.equal((await request('/password/reset', { token: resetToken, password: 'AnotherPass123' })).status, 400)
+    assert.equal((await request('/password/reset', { email, otp: resetOtp, password: 'AnotherPass123' })).status, 400)
   } finally {
     await pool.query('DELETE FROM users WHERE email = $1', [email])
     await new Promise((resolve) => server.close(resolve))

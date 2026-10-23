@@ -14,7 +14,13 @@ const conversationColumns = `c.id, c.listing_type AS "listingType", c.listing_id
   CASE WHEN c.owner_user_id = $1 THEN requester.id ELSE owner.id END AS "otherUserId",
   (SELECT m.body FROM chat_messages m WHERE m.conversation_id = c.id
    AND m.created_at > COALESCE(CASE WHEN c.owner_user_id = $1 THEN c.owner_cleared_at ELSE c.requester_cleared_at END, '-infinity'::timestamptz)
-   ORDER BY m.created_at DESC, m.id DESC LIMIT 1) AS "lastMessage"`
+   ORDER BY m.created_at DESC, m.id DESC LIMIT 1) AS "lastMessage",
+  (SELECT COUNT(*)::integer FROM chat_messages m WHERE m.conversation_id = c.id
+   AND m.sender_user_id <> $1
+   AND m.created_at > GREATEST(
+     COALESCE(CASE WHEN c.owner_user_id = $1 THEN c.owner_read_at ELSE c.requester_read_at END, '-infinity'::timestamptz),
+     COALESCE(CASE WHEN c.owner_user_id = $1 THEN c.owner_cleared_at ELSE c.requester_cleared_at END, '-infinity'::timestamptz)
+   )) AS "unreadCount"`
 const conversationFrom = `FROM chat_conversations c
   JOIN users requester ON requester.id = c.requester_user_id
   JOIN users owner ON owner.id = c.owner_user_id`
@@ -115,7 +121,10 @@ export async function listMessages(request, response, next) {
     }
     const result = await pool.query(
       `SELECT m.id, m.conversation_id AS "conversationId", m.sender_user_id AS "senderUserId",
-        u.name AS "senderName", m.body, m.created_at AS "createdAt", m.edited_at AS "editedAt"
+        u.name AS "senderName", m.body, m.created_at AS "createdAt", m.edited_at AS "editedAt",
+        CASE WHEN m.sender_user_id = c.requester_user_id AND c.owner_read_at >= m.created_at THEN c.owner_read_at
+             WHEN m.sender_user_id = c.owner_user_id AND c.requester_read_at >= m.created_at THEN c.requester_read_at
+             ELSE NULL END AS "seenAt"
        FROM chat_messages m JOIN users u ON u.id = m.sender_user_id
        JOIN chat_conversations c ON c.id = m.conversation_id
        WHERE m.conversation_id = $1
@@ -148,11 +157,35 @@ export async function sendMessage(request, response, next) {
     if (!result.rowCount) throw new ApiError(404, 'Chat not found.')
     await client.query('UPDATE chat_conversations SET updated_at = NOW() WHERE id = $1', [conversationId])
     await client.query('COMMIT')
-    response.status(201).json({ message: { ...result.rows[0], senderName: request.user.name } })
+    response.status(201).json({ message: { ...result.rows[0], senderName: request.user.name, seenAt: null } })
   } catch (error) {
     if (client) await client.query('ROLLBACK')
     next(error)
   } finally { client?.release() }
+}
+
+export async function markConversationRead(request, response, next) {
+  try {
+    const conversationId = validId(request.params.id)
+    const messageId = validId(request.body?.messageId)
+    if (!request.body || Object.keys(request.body).some((key) => key !== 'messageId')) throw new ApiError(400, 'Only a message reference is accepted.')
+    const result = await pool.query(
+      `UPDATE chat_conversations c SET
+         requester_read_at = CASE WHEN c.requester_user_id = $2
+           THEN GREATEST(COALESCE(c.requester_read_at, '-infinity'::timestamptz), m.created_at)
+           ELSE c.requester_read_at END,
+         owner_read_at = CASE WHEN c.owner_user_id = $2
+           THEN GREATEST(COALESCE(c.owner_read_at, '-infinity'::timestamptz), m.created_at)
+           ELSE c.owner_read_at END
+       FROM chat_messages m
+       WHERE c.id = $1 AND m.id = $3 AND m.conversation_id = c.id
+         AND (c.requester_user_id = $2 OR c.owner_user_id = $2)
+       RETURNING c.id`,
+      [conversationId, request.user.id, messageId],
+    )
+    if (!result.rowCount) throw new ApiError(404, 'Chat or message not found.')
+    response.status(204).end()
+  } catch (error) { next(error) }
 }
 
 export async function editMessage(request, response, next) {

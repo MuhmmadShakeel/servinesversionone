@@ -11,9 +11,16 @@ import * as productCommerce from './migrations/007_product_commerce.js'
 import * as chat from './migrations/008_chat.js'
 import * as listingShares from './migrations/009_listing_shares.js'
 import * as chatManagement from './migrations/010_chat_management.js'
+import * as productBids from './migrations/011_product_bids.js'
+import * as listingVoice from './migrations/012_listing_voice.js'
+import * as chatReadReceipts from './migrations/013_chat_read_receipts.js'
+import * as listingCategories from './migrations/014_listing_categories.js'
+import * as profileImages from './migrations/015_profile_images.js'
+import * as serviceCity from './migrations/016_service_city.js'
+import * as voiceBlobUrls from './migrations/017_voice_blob_urls.js'
 
 // Register new marketplace migrations here as they are written.
-const migrations = [auth, services, hiring, serviceBookings, serviceBookingPendingIndex, products, productCommerce, chat, listingShares, chatManagement]
+const migrations = [auth, services, hiring, serviceBookings, serviceBookingPendingIndex, products, productCommerce, chat, listingShares, chatManagement, productBids, listingVoice, chatReadReceipts, listingCategories, profileImages, serviceCity, voiceBlobUrls]
 
 export async function migrate() {
   const client = await pool.connect()
@@ -29,6 +36,60 @@ export async function migrate() {
           await client.query('INSERT INTO schema_migrations (name) VALUES ($1)', [migration.name])
         }
       }
+      // Keep existing databases in sync with the review tables added to the listing migrations.
+      for (const [table, listingColumn, listingTable, indexName] of [
+        ['service_reviews', 'service_id', 'services', 'service_reviews_service_idx'],
+        ['product_reviews', 'product_id', 'products', 'product_reviews_product_idx'],
+        ['job_reviews', 'requirement_id', 'hiring_requirements', 'job_reviews_requirement_idx'],
+      ]) {
+        await client.query(`CREATE TABLE IF NOT EXISTS ${table} (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          ${listingColumn} UUID NOT NULL REFERENCES ${listingTable}(id) ON DELETE CASCADE,
+          reviewer_user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+          rating SMALLINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+          body VARCHAR(1000) NOT NULL CHECK (char_length(body) BETWEEN 10 AND 1000),
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          UNIQUE (${listingColumn}, reviewer_user_id)
+        )`)
+        await client.query(`CREATE INDEX IF NOT EXISTS ${indexName} ON ${table}(${listingColumn}, created_at DESC)`)
+      }
+      // Existing installations have already recorded the table-creation migrations.
+      await client.query('ALTER TABLE services ADD COLUMN IF NOT EXISTS original_price NUMERIC(12, 2)')
+      await client.query('ALTER TABLE services ADD COLUMN IF NOT EXISTS image_mime_type VARCHAR(30)')
+      await client.query('ALTER TABLE services ADD COLUMN IF NOT EXISTS image_file_name VARCHAR(180)')
+      await client.query('ALTER TABLE services ADD COLUMN IF NOT EXISTS image_content BYTEA')
+      await client.query('ALTER TABLE products ADD COLUMN IF NOT EXISTS original_price NUMERIC(12, 2)')
+      await client.query('ALTER TABLE products ADD COLUMN IF NOT EXISTS bidding_enabled BOOLEAN NOT NULL DEFAULT FALSE')
+      await client.query('ALTER TABLE products ADD COLUMN IF NOT EXISTS bidding_started_at TIMESTAMPTZ')
+      await client.query('ALTER TABLE products ADD COLUMN IF NOT EXISTS bidding_ends_at TIMESTAMPTZ')
+      await client.query('UPDATE services SET original_price = price WHERE original_price IS NULL')
+      await client.query('UPDATE products SET original_price = price WHERE original_price IS NULL')
+      await client.query(`DO $$ BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'services_original_price_check' AND conrelid = 'services'::regclass) THEN
+          ALTER TABLE services ADD CONSTRAINT services_original_price_check CHECK (original_price >= price);
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'products_original_price_check' AND conrelid = 'products'::regclass) THEN
+          ALTER TABLE products ADD CONSTRAINT products_original_price_check CHECK (original_price >= price);
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'products_bidding_window_check' AND conrelid = 'products'::regclass) THEN
+          ALTER TABLE products ADD CONSTRAINT products_bidding_window_check CHECK (
+            (NOT bidding_enabled AND bidding_started_at IS NULL AND bidding_ends_at IS NULL)
+            OR (bidding_enabled AND bidding_started_at IS NOT NULL AND bidding_ends_at > bidding_started_at)
+          );
+        END IF;
+      END $$`)
+      await client.query(`CREATE TABLE IF NOT EXISTS listing_boosts (
+        listing_type VARCHAR(10) NOT NULL CHECK (listing_type IN ('service', 'product', 'hiring')),
+        listing_id UUID NOT NULL,
+        owner_user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        budget NUMERIC(12, 2) NOT NULL CHECK (budget > 0),
+        duration_count SMALLINT NOT NULL CHECK (duration_count BETWEEN 1 AND 365),
+        duration_unit VARCHAR(5) NOT NULL CHECK (duration_unit IN ('day', 'week', 'month', 'year')),
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        PRIMARY KEY (listing_type, listing_id)
+      )`)
       await client.query('COMMIT')
     } catch (error) {
       await client.query('ROLLBACK')

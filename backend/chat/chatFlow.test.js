@@ -47,10 +47,18 @@ test('chat stays between the listing owner and the correct buyer or applicant', 
     assert.equal(sent.status, 201)
     const buyerMessage = (await sent.json()).message
     assert.equal(buyerMessage.senderName, 'Buyer')
+    assert.equal((await (await send('GET', '/v1/chat/conversations', provider)).json()).conversations.find((item) => item.id === serviceChat.id).unreadCount, 1)
+    assert.equal((await (await send('GET', '/v1/chat/conversations', buyer)).json()).conversations.find((item) => item.id === serviceChat.id).unreadCount, 0)
     const ownerMessages = await send('GET', `/v1/chat/conversations/${serviceChat.id}/messages`, provider)
     assert.equal(ownerMessages.status, 200)
     assert.equal((await ownerMessages.json()).messages[0].body, 'Is Saturday available?')
+    assert.equal((await send('POST', `/v1/chat/conversations/${serviceChat.id}/read`, outsider, { messageId: buyerMessage.id })).status, 404)
+    assert.equal((await send('POST', `/v1/chat/conversations/${serviceChat.id}/read`, provider, { messageId: randomUUID() })).status, 404)
+    assert.equal((await send('POST', `/v1/chat/conversations/${serviceChat.id}/read`, provider, { messageId: buyerMessage.id })).status, 204)
+    assert.equal((await (await send('GET', '/v1/chat/conversations', provider)).json()).conversations.find((item) => item.id === serviceChat.id).unreadCount, 0)
+    assert.ok((await (await send('GET', `/v1/chat/conversations/${serviceChat.id}/messages`, buyer)).json()).messages[0].seenAt)
     assert.equal((await send('POST', `/v1/chat/conversations/${serviceChat.id}/messages`, provider, { body: 'Yes, Saturday works.' })).status, 201)
+    assert.equal((await (await send('GET', '/v1/chat/conversations', buyer)).json()).conversations.find((item) => item.id === serviceChat.id).unreadCount, 1)
     const messagePath = `/v1/chat/conversations/${serviceChat.id}/messages/${buyerMessage.id}`
     assert.equal((await send('PATCH', messagePath, provider, { body: 'Not my message' })).status, 404)
     assert.equal((await send('DELETE', messagePath, outsider)).status, 404)

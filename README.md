@@ -35,7 +35,7 @@ The browser keeps its token in session storage, so closing the browser session s
 
 `003_hiring.js` creates requirements, worker proposals, and requirement attachments. A client can create, edit, close, or delete their own requirements and review every proposal sent to those requirements. A worker can browse open work, submit one proposal per requirement, view their own proposals, and edit or withdraw a pending proposal while the requirement stays open. The client can accept one offer, which awards the requirement and rejects the others. Workers cannot inspect competing proposals.
 
-Photo, video, and audio attachments for requirements are stored as PostgreSQL `BYTEA`. Up to three files are allowed, with an 8 MB per-file and 16 MB total limit. Uploaded files are validated for supported media types and served through an authenticated endpoint. The Hiring UI is connected through `frontend/src/redux/Api/hiring/HiringApi.js`.
+Photo and video attachments for requirements are stored as PostgreSQL `BYTEA`. Up to three files are allowed, with an 8 MB per-file and 16 MB total limit. Voice notes use Vercel Blob as described below. Existing audio attachments remain readable. Uploaded files are validated for supported media types and served through an authenticated endpoint. The Hiring UI is connected through `frontend/src/redux/Api/hiring/HiringApi.js`.
 
 ## Service bookings
 
@@ -48,6 +48,16 @@ My Services has views for owned services, received booking requests, and booking
 `006_products.js` adds owner-scoped products with title, category, description, price, stock quantity, Draft/Active status, and one image stored in PostgreSQL. Sellers manage their own products in Mart. JPEG, PNG, and WebP images up to 5 MB are accepted; the server checks the file signature and serves the image to the owner and logged-in shoppers while the product is active. Publishing requires an image and positive stock.
 
 `007_product_commerce.js` adds wishlist, cart, and order records. Logged-in users can browse active products in Explore Listings, save favorites, add products to a cart, and place an order with contact and delivery details. Checkout rechecks stock and saves a separate order item for each product. Sellers see their sales orders in Mart and can confirm, decline, or mark them fulfilled. Buyers can cancel pending orders. Declined or cancelled orders restore stock. Sold-out products become Draft; sellers can publish them again after restocking. No online payment is collected: payment and delivery are arranged with the seller.
+
+## Private messages
+
+`008_chat.js` adds private conversations and messages. A logged-in user can open a conversation from an active service, open hiring requirement, or active product. Existing bookings, proposals, cart items, and orders can also open the matching conversation, including from the provider or seller side. The server derives both participants from the listing or transaction; clients cannot choose another recipient. Messages and the inbox are available only to those two users through `/v1/chat`. The Messages page checks for new messages periodically and supports loading older messages. Display names come from the users table; email addresses are not exposed in chat. `010_chat_management.js` adds message edit timestamps and a separate clear point for each participant. Users can edit or delete only their own visible messages. Deleting a message removes it for both participants; clearing a chat hides its existing history only for the user who cleared it.
+
+## Listing voice notes
+
+Products, services, and hiring requirements can include an optional voice note of up to one minute and 8 MB. The browser uploads new notes directly to a private Vercel Blob store using a short-lived grant from the authenticated API. PostgreSQL stores the Blob URL, format, and duration. Playback still goes through the authenticated listing routes and uses their visibility rules. Replacing or deleting a note removes its old Blob object. Older notes stored in `backend/voice/` (or `VOICE_STORAGE_DIR`) remain readable on installations that still have those files.
+
+Create a **private** Vercel Blob store and set `BLOB_READ_WRITE_TOKEN` in the backend environment; do not expose the token to the frontend. The frontend needs no Blob secret. The database migration `017_voice_blob_urls` widens the voice reference columns to hold URLs. Local development can upload using the backend token, though Vercel's upload-completion callback cannot reach localhost; listing creation stores the returned URL directly.
 
 ## Verification
 

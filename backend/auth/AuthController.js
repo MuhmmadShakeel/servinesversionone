@@ -8,6 +8,39 @@ import { normalizeEmail, validateName, validatePassword } from './passwordPolicy
 
 const userFields = 'id, name, email'
 
+export async function updateProfileImage(request, response, next) {
+  try {
+    const { image } = request.body || {}
+    if (!image || typeof image !== 'object' || Array.isArray(image) || Object.keys(image).some((key) => !['mimeType', 'base64'].includes(key))) {
+      throw new ApiError(400, 'Choose a PNG, JPEG, or WebP image.')
+    }
+    const signatures = {
+      'image/png': (bytes) => bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])),
+      'image/jpeg': (bytes) => bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff,
+      'image/webp': (bytes) => bytes.toString('ascii', 0, 4) === 'RIFF' && bytes.toString('ascii', 8, 12) === 'WEBP',
+    }
+    if (!signatures[image.mimeType] || typeof image.base64 !== 'string' || !/^[A-Za-z0-9+/]+={0,2}$/.test(image.base64)) {
+      throw new ApiError(400, 'Choose a PNG, JPEG, or WebP image.')
+    }
+    const bytes = Buffer.from(image.base64, 'base64')
+    if (!bytes.length || bytes.length > 1024 * 1024 || !signatures[image.mimeType](bytes)) {
+      throw new ApiError(400, 'Choose a valid image smaller than 1 MB.')
+    }
+    await pool.query('UPDATE users SET profile_image_content = $2, profile_image_mime_type = $3, updated_at = NOW() WHERE id = $1', [request.user.id, bytes, image.mimeType])
+    response.json({ hasProfileImage: true })
+  } catch (error) { next(error) }
+}
+
+export async function getProfileImage(request, response, next) {
+  try {
+    const result = await pool.query('SELECT profile_image_content, profile_image_mime_type FROM users WHERE id = $1', [request.user.id])
+    if (!result.rows[0]?.profile_image_content) throw new ApiError(404, 'Profile picture not found.')
+    response.set('Cache-Control', 'private, no-store')
+    response.set('X-Content-Type-Options', 'nosniff')
+    response.type(result.rows[0].profile_image_mime_type).send(result.rows[0].profile_image_content)
+  } catch (error) { next(error) }
+}
+
 function readCredentials(body) {
   if (!body || typeof body !== 'object' || Object.keys(body).some((key) => !['name', 'email', 'password'].includes(key))) {
     throw new ApiError(400, 'Only name, email and password are accepted.')

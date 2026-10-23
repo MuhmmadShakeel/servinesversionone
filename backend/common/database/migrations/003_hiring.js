@@ -43,4 +43,15 @@ export const up = `
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   );
   CREATE INDEX hiring_media_requirement_idx ON hiring_media(requirement_id);
+  CREATE TABLE job_reviews (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    requirement_id UUID NOT NULL REFERENCES hiring_requirements(id) ON DELETE CASCADE,
+    reviewer_user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    rating SMALLINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    body VARCHAR(1000) NOT NULL CHECK (char_length(body) BETWEEN 10 AND 1000),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (requirement_id, reviewer_user_id)
+  );
+  CREATE INDEX job_reviews_requirement_idx ON job_reviews(requirement_id, created_at DESC);
 `

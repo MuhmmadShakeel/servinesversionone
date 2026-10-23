@@ -11,10 +11,16 @@ export const productApi = createApi({
       return headers
     },
   }),
-  tagTypes: ['MyProducts', 'BrowseProducts', 'Wishlist', 'Cart', 'MyOrders', 'SalesOrders'],
+  tagTypes: ['MyProducts', 'BrowseProducts', 'Wishlist', 'Cart', 'MyOrders', 'SalesOrders', 'ProductBids', 'ReceivedBids'],
   endpoints: (builder) => ({
     getMyProducts: builder.query({ query: () => '/', providesTags: ['MyProducts'] }),
-    browseProducts: builder.query({ query: () => '/browse', providesTags: ['BrowseProducts'] }),
+    browseProducts: builder.query({ query: (liveDeals) => liveDeals ? '/browse?liveDeals=1' : '/browse', providesTags: ['BrowseProducts'] }),
+    getProductBids: builder.query({ query: (id) => `/${id}/bids`, providesTags: (_result, _error, id) => [{ type: 'ProductBids', id }] }),
+    getReceivedBids: builder.query({ query: () => '/bids/received', providesTags: ['ReceivedBids'] }),
+    placeBid: builder.mutation({
+      query: ({ id, amount, note }) => ({ url: `/${id}/bids`, method: 'POST', body: { amount, note } }),
+      invalidatesTags: (_result, _error, { id }) => ['BrowseProducts', 'MyProducts', 'ReceivedBids', { type: 'ProductBids', id }],
+    }),
     getWishlist: builder.query({ query: () => '/wishlist', providesTags: ['Wishlist'] }),
     addWishlist: builder.mutation({ query: (id) => ({ url: `/wishlist/${id}`, method: 'POST' }), invalidatesTags: ['Wishlist'] }),
     removeWishlist: builder.mutation({ query: (id) => ({ url: `/wishlist/${id}`, method: 'DELETE' }), invalidatesTags: ['Wishlist'] }),
@@ -35,6 +41,7 @@ export const productApi = createApi({
 
 export const {
   useGetMyProductsQuery, useBrowseProductsQuery, useGetWishlistQuery,
+  useGetProductBidsQuery, useGetReceivedBidsQuery, usePlaceBidMutation,
   useAddWishlistMutation, useRemoveWishlistMutation, useGetCartQuery,
   useAddCartMutation, useUpdateCartMutation, useRemoveCartMutation,
   useCheckoutMutation, useGetMyOrdersQuery, useGetSalesOrdersQuery,

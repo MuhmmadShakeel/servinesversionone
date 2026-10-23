@@ -1,0 +1,64 @@
+.help-page { max-width: 1320px; margin: 0 auto; padding-bottom: 64px; }
+.help-hero { position: relative; display: flex; align-items: center; justify-content: space-between; min-height: 310px; overflow: hidden; padding: 45px clamp(28px, 5vw, 66px); border-radius: 22px; background: #21163f; color: #fff; isolation: isolate; }
+.help-hero::before { content: ''; position: absolute; z-index: -1; inset: 0; background: radial-gradient(circle at 82% 35%, rgba(156,126,255,.28), transparent 32%), radial-gradient(circle at 45% 110%, rgba(109,75,244,.25), transparent 50%); }
+.help-hero-copy { position: relative; z-index: 2; width: min(100%, 680px); }
+.help-eyebrow { display: flex; align-items: center; gap: 12px; color: #cfc2ff; font-size: 10px; font-weight: 800; letter-spacing: 2px; }
+.help-eyebrow span { width: 4px; height: 4px; border-radius: 50%; background: #b39fff; }
+.help-hero h1 { margin: 17px 0 12px; font: 800 clamp(35px, 4vw, 53px)/1.12 var(--font-display); letter-spacing: -1.8px; }
+.help-hero p { max-width: 550px; margin: 0; color: #d8d0ea; font-size: 14px; line-height: 1.7; }
+.help-search { display: flex; align-items: center; gap: 12px; width: min(100%, 560px); min-height: 52px; margin-top: 28px; padding: 0 15px; border: 1px solid rgba(255,255,255,.25); border-radius: 11px; background: #fff; color: var(--text-3); box-shadow: 0 10px 28px rgba(10,5,37,.16); }
+.help-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--text-1); font-size: 13px; }
+.help-search input::placeholder { color: #85809b; }
+.help-search:focus-within { outline: 3px solid rgba(190,176,255,.65); outline-offset: 2px; }
+.help-search-hint { flex: none; padding-left: 12px; border-left: 1px solid var(--border-soft); color: var(--text-4); font-size: 11px; font-weight: 700; }
+.help-hero-art { position: relative; flex: 0 0 250px; height: 205px; margin: 0 8px 0 24px; }
+.help-art-orb { position: absolute; inset: 17px 22px 10px 18px; border: 1px solid rgba(232,223,255,.25); border-radius: 50%; box-shadow: 0 0 0 26px rgba(255,255,255,.035), 0 0 0 56px rgba(255,255,255,.025); }
+.help-art-card { position: absolute; z-index: 1; display: flex; align-items: center; gap: 15px; width: 177px; height: 95px; padding: 18px; border-radius: 16px; box-shadow: 0 18px 34px rgba(12,5,38,.2); }
+.help-art-card-back { top: 18px; right: 10px; transform: rotate(10deg); border: 1px solid rgba(255,255,255,.24); background: #6650bd; color: #fff; }
+.help-art-card-back > span { width: 68px; height: 8px; border-radius: 8px; background: rgba(255,255,255,.55); }
+.help-art-card-front { bottom: 13px; left: 0; transform: rotate(-9deg); background: #fff; }
+.help-art-check { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: #e7f7f0; color: #178461; }
+.help-art-card-front > span:last-child { display: grid; gap: 7px; }
+.help-art-card-front i { display: block; width: 70px; height: 6px; border-radius: 6px; background: #ded8ef; }
+.help-art-card-front i:first-child { width: 47px; height: 8px; background: #6851bd; }
+.help-art-card-front i:last-child { width: 55px; }
+.help-layout { display: grid; grid-template-columns: 215px minmax(0, 1fr); align-items: start; gap: clamp(24px, 4vw, 58px); margin-top: 40px; }
+.help-rail-inner { position: sticky; top: 28px; }
+.help-rail-label, .help-section-heading > div > span, .help-guide-kicker { color: var(--brand-dark); font-size: 10px; font-weight: 900; letter-spacing: 1.7px; }
+.help-rail nav { display: grid; gap: 2px; margin-top: 15px; }
+.help-rail nav a { display: flex; gap: 11px; align-items: baseline; padding: 11px 10px; border-left: 2px solid transparent; border-radius: 0 8px 8px 0; color: var(--text-3); font-size: 12px; font-weight: 700; line-height: 1.35; text-decoration: none; }
+.help-rail nav a span { color: var(--text-4); font-size: 10px; }
+.help-rail nav a:hover, .help-rail nav a:focus-visible { border-left-color: var(--brand); background: var(--brand-pale); color: var(--brand-dark); }
+.help-rail-note { display: flex; gap: 10px; margin-top: 28px; padding: 15px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--brand); }
+.help-rail-note svg { flex: none; }
+.help-rail-note p { margin: 0; color: var(--text-3); font-size: 11px; line-height: 1.6; }
+.help-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 22px; }
+.help-section-heading h2 { margin: 6px 0 5px; color: var(--text-1); font: 800 29px/1.25 var(--font-display); letter-spacing: -.8px; }
+.help-section-heading p { margin: 0; color: var(--text-3); font-size: 13px; line-height: 1.6; }
+.help-result-count { flex: none; padding: 7px 10px; border: 1px solid var(--border); border-radius: 7px; background: var(--surface); color: var(--text-3); font-size: 11px; font-weight: 700; }
+.help-guides { display: grid; gap: 14px; }
+.help-guide { scroll-margin-top: 24px; overflow: hidden; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); box-shadow: 0 2px 12px rgba(32,20,80,.035); }
+.help-guide-image { position: relative; height: clamp(170px, 22vw, 245px); overflow: hidden; background: #eeebf7; }
+.help-guide-image img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 52%; }
+.help-guide-image > span { position: absolute; top: 18px; left: 18px; padding: 7px 10px; border: 1px solid rgba(255,255,255,.9); border-radius: 7px; background: rgba(255,255,255,.92); color: var(--brand-dark); font-size: 10px; font-weight: 900; letter-spacing: 1.2px; box-shadow: 0 2px 10px rgba(22,14,57,.08); }
+.help-guide-body { padding: clamp(20px, 3vw, 30px); }
+.help-guide-heading { display: flex; align-items: flex-start; gap: 17px; }
+.help-guide-icon { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; border: 1px solid #e5defa; border-radius: 11px; background: #f3efff; color: var(--brand-dark); }
+.help-guide-kicker { display: block; margin: 0 0 6px; }
+.help-guide h3 { margin: 0 0 5px; color: var(--text-1); font: 800 18px/1.35 var(--font-display); letter-spacing: -.3px; }
+.help-guide-heading p { margin: 0; color: var(--text-3); font-size: 12px; line-height: 1.6; }
+.help-guide ol { display: grid; gap: 0; margin: 21px 0 21px 61px; padding: 0; list-style: none; counter-reset: help-step; }
+.help-guide li { position: relative; padding: 0 0 15px 32px; border-left: 1px solid #e7e2f2; counter-increment: help-step; color: var(--text-2); font-size: 12px; line-height: 1.6; }
+.help-guide li:last-child { padding-bottom: 0; border-left-color: transparent; }
+.help-guide li::before { content: counter(help-step); position: absolute; top: -2px; left: -11px; display: grid; place-items: center; width: 21px; height: 21px; border: 1px solid #dcd3f8; border-radius: 50%; background: #f6f3ff; color: var(--brand-dark); font-size: 10px; font-weight: 800; }
+.help-guide button { display: inline-flex; align-items: center; gap: 14px; margin-left: 61px; padding: 9px 0; border: 0; background: transparent; color: var(--brand-dark); font-size: 12px; font-weight: 800; cursor: pointer; }
+.help-guide button:hover { color: var(--brand); }
+.help-guide button svg { transition: transform var(--t-fast); }
+.help-guide button:hover svg { transform: translateX(3px); }
+.help-no-results { display: grid; justify-items: start; gap: 8px; padding: 32px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-3); }
+.help-no-results h3 { margin: 0; color: var(--text-1); font: 800 19px var(--font-display); }
+.help-no-results p { margin: 0 0 6px; font-size: 13px; }
+.help-no-results button { padding: 9px 13px; border: 0; border-radius: 8px; background: var(--brand); color: #fff; font-size: 12px; font-weight: 800; }
+@media (max-width: 1000px) { .help-hero-art { flex-basis: 170px; transform: scale(.8); transform-origin: center; } .help-layout { grid-template-columns: 180px minmax(0, 1fr); gap: 25px; } }
+@media (max-width: 760px) { .help-hero { min-height: 0; padding: 36px 28px; } .help-hero-art { display: none; } .help-layout { display: block; margin-top: 30px; } .help-rail { display: none; } }
+@media (max-width: 520px) { .help-hero { padding: 30px 22px; border-radius: 16px; } .help-hero h1 { font-size: 34px; } .help-search-hint { display: none; } .help-section-heading { align-items: flex-start; } .help-result-count { display: none; } .help-guide-heading { gap: 12px; } .help-guide ol { margin-left: 21px; } .help-guide button { margin-left: 53px; } }

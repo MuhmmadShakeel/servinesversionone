@@ -5,6 +5,10 @@ export function PrimaryButton({ children, icon = 'plus', onClick }) {
   return <button className="primary-button" type="button" onClick={onClick}><Icon name={icon} size={17} />{children}</button>
 }
 
+export function ChatButton({ onClick, label = 'Chat' }) {
+  return <button className="chat-action-button" type="button" onClick={onClick}><Icon name="chat" size={16}/>{label}</button>
+}
+
 export function SectionTitle({ title, description, action, onAction }) {
   return <div className="section-title"><div><h2>{title}</h2>{description && <p>{description}</p>}</div>{action && <button className="link-button" onClick={onAction}>{action}<Icon name="arrow" size={16} /></button>}</div>
 }
@@ -15,6 +19,10 @@ export function SearchBox({ value, onChange, placeholder = 'Search anything...' 
 
 export function EmptyState({ label = 'No matching results', detail = 'Try a different search or category.' }) {
   return <div className="empty-state"><span><Icon name="search" size={26} /></span><h3>{label}</h3><p>{detail}</p></div>
+}
+
+export function RequestError({ onRetry }) {
+  return <div className="request-retry"><button type="button" onClick={onRetry}>Try loading again <Icon name="arrow" size={16}/></button></div>
 }
 
 export function SurfaceModal({ title, children, onClose }) {

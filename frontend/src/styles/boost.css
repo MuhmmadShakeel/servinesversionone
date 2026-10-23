@@ -1,0 +1,22 @@
+.boost-form-heading { display: flex; align-items: flex-start; gap: 14px; padding: 15px; margin-bottom: 20px; border: 1px solid #e8defb; border-radius: 14px; background: linear-gradient(135deg, #f7f1ff, #fff); }
+.boost-form-heading > span { display: grid; place-items: center; flex: none; width: 43px; height: 43px; border-radius: 12px; background: #eadbff; color: #6942ac; }
+.boost-form-heading strong { display: block; color: var(--text-1); font-size: 15px; font-weight: 900; }
+.boost-form-heading p { margin: 5px 0 0; color: var(--text-3); font-size: 12px; line-height: 1.5; }
+.boost-form { display: grid; gap: 16px; }
+.boost-benchmark { padding: 15px 17px; border: 1px solid #d9c8f6; border-radius: 12px; background: linear-gradient(135deg, #f5edff, #fff); }
+.boost-benchmark > span { display: block; margin-bottom: 6px; color: var(--brand); font-size: 10px; font-weight: 900; letter-spacing: 1px; }
+.boost-benchmark > strong { display: block; color: var(--text-1); font-size: 23px; line-height: 1.2; }
+.boost-benchmark > strong small { color: var(--text-3); font-size: 12px; font-weight: 700; }
+.boost-benchmark p { margin: 7px 0 0; color: var(--text-3); font-size: 11px; line-height: 1.5; }
+.boost-form label { display: grid; gap: 7px; color: var(--text-2); font-size: 12px; font-weight: 800; }
+.boost-form input, .boost-form select { width: 100%; height: 44px; padding: 0 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text-1); font: 700 14px var(--font-sans), sans-serif; }
+.boost-form input:focus, .boost-form select:focus { outline: 2px solid var(--brand); outline-offset: 1px; }
+.boost-duration-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.boost-form-note { margin: 0; padding: 11px 12px; border-radius: 10px; background: var(--brand-pale); color: var(--text-2); font-size: 12px; line-height: 1.5; }
+.boost-form-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 9px; padding-top: 4px; }
+.boost-form-actions .boost-remove-button { margin-right: auto; border: 0; background: none; color: #b53953; font-weight: 800; cursor: pointer; }
+.boost-form-status { padding: 28px 0; color: var(--text-3); text-align: center; }
+.boost-delete-confirm { padding: 12px; border: 1px solid #f3cbd2; border-radius: 11px; background: #fff8f9; }
+.boost-delete-confirm p { margin: 0 0 10px; color: var(--text-1); font-size: 13px; font-weight: 700; }
+.boost-delete-confirm button { margin-right: 8px; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+@media (max-width: 450px) { .boost-duration-fields { grid-template-columns: 1fr; } .boost-form-actions .boost-remove-button { flex-basis: 100%; text-align: left; } }
